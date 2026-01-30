@@ -25,7 +25,7 @@ A minimalist, dark-mode personal website built to showcase my career in Sales En
 
 - 🔗 [LinkedIn](https://linkedin.saba.link)
 - 🌐 [Website](https://saba.link)
-- 📧 hello@saba.link
+- 📧 hello.github@saba.link
 
 ---
 
