@@ -1,0 +1,6 @@
+name = "small-tree-9310"
+compatibility_date = "2024-01-01"
+preview_urls = false
+
+[assets]
+directory = "./"
