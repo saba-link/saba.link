@@ -95,7 +95,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
         :root {
             --bg: #0b0b0d;
@@ -861,8 +860,7 @@
             
             <!-- CV Preview -->
             <div class="cv-preview-container">
-                <canvas id="cvPreview"></canvas>
-                <div class="cv-preview-loading">Loading preview...</div>
+                <img id="cvPreview" src="CV-Dark-thumb.png" alt="CV Preview">
             </div>
             
             <p class="cv-theme-hint">Dark version for on-screen reading, Light for printing</p>
@@ -1034,7 +1032,6 @@
         }
         /* CV Preview */
         .cv-preview-container {
-            position: relative;
             width: 100%;
             max-width: 280px;
             margin: 0 auto 1rem;
@@ -1042,23 +1039,11 @@
             overflow: hidden;
             border: 1px solid var(--border);
             background: var(--bg);
-            aspect-ratio: 1 / 1.414;
         }
-        .cv-preview-container canvas {
+        .cv-preview-container img {
             width: 100%;
-            height: 100%;
+            height: auto;
             display: block;
-        }
-        .cv-preview-loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: var(--text-muted);
-            font-size: 0.875rem;
-        }
-        .cv-preview-container canvas:not([width="0"]) + .cv-preview-loading {
-            display: none;
         }
         .cv-theme-hint {
             color: var(--text-muted);
@@ -1071,8 +1056,6 @@
         function openCvModal() {
             document.getElementById('cvModal').classList.add('active');
             document.body.style.overflow = 'hidden';
-            // Render preview after modal is visible
-            setTimeout(() => renderCvPreview(currentPdfUrl), 100);
         }
         
         function closeCvModal() {
@@ -1085,65 +1068,27 @@
             document.getElementById('successMsg').classList.add('show');
         }
         
-        // PDF.js worker
-        if (typeof pdfjsLib !== 'undefined') {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        }
-        
-        // Render CV preview
-        let currentPdfUrl = 'CV-Dark.pdf';
-        
-        async function renderCvPreview(pdfUrl) {
-            if (typeof pdfjsLib === 'undefined') return;
-            
-            const canvas = document.getElementById('cvPreview');
-            const ctx = canvas.getContext('2d');
-            
-            try {
-                const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
-                const page = await pdf.getPage(1);
-                
-                const container = canvas.parentElement;
-                const containerWidth = container.clientWidth || 280;
-                const viewport = page.getViewport({ scale: 1 });
-                const scale = containerWidth / viewport.width;
-                const scaledViewport = page.getViewport({ scale: scale * 2 }); // 2x for retina
-                
-                canvas.width = scaledViewport.width;
-                canvas.height = scaledViewport.height;
-                canvas.style.width = containerWidth + 'px';
-                canvas.style.height = (containerWidth * viewport.height / viewport.width) + 'px';
-                
-                await page.render({
-                    canvasContext: ctx,
-                    viewport: scaledViewport
-                }).promise;
-            } catch (e) {
-                console.log('PDF preview error:', e);
-            }
-        }
-        
         // Theme toggle for CV download
         function toggleCvTheme() {
             const toggle = document.getElementById('themeToggle');
             const downloadBtn = document.getElementById('downloadBtn');
             const darkLabel = document.getElementById('darkLabel');
             const lightLabel = document.getElementById('lightLabel');
+            const preview = document.getElementById('cvPreview');
             
             if (toggle.checked) {
                 // Light mode
                 downloadBtn.href = 'CV-Light.pdf';
+                preview.src = 'CV-Light-thumb.png';
                 darkLabel.classList.remove('active');
                 lightLabel.classList.add('active');
-                currentPdfUrl = 'CV-Light.pdf';
             } else {
                 // Dark mode (default)
                 downloadBtn.href = 'CV-Dark.pdf';
+                preview.src = 'CV-Dark-thumb.png';
                 darkLabel.classList.add('active');
                 lightLabel.classList.remove('active');
-                currentPdfUrl = 'CV-Dark.pdf';
             }
-            renderCvPreview(currentPdfUrl);
         }
         
         // Initialize toggle state based on website theme
