@@ -163,6 +163,40 @@
             font-size: 0.85rem;
             margin-top: 0.5rem;
         }
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+        .article-meta .meta-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .article-meta .meta-date svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--text-muted);
+            opacity: 0.7;
+        }
+        .article-meta .meta-dot {
+            opacity: 0.4;
+            font-size: 0.5rem;
+        }
+        .article-meta .meta-read {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .article-meta .meta-read svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--text-muted);
+            opacity: 0.7;
+        }
         .other-posts {
             margin-top: 3rem;
         }
@@ -242,7 +276,17 @@
         <span class="tag">Zero Trust</span>
         <h1>Zero Trust is not a product</h1>
         <p class="excerpt">There's a slide I've seen hundreds of times. It shows a before-and-after: castle-and-moat on the left, Zero Trust on the right. Buy this product, get Zero Trust. It's a good slide. It's also misleading.</p>
-        <p class="read-time">8 min read</p>
+        <div class="article-meta">
+            <span class="meta-date">
+                <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                January 15, 2026
+            </span>
+            <span class="meta-dot">●</span>
+            <span class="meta-read">
+                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                8 min read
+            </span>
+        </div>
     </div>
 
     <div class="divider"><hr></div>
