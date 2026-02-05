@@ -85,15 +85,15 @@
         /* === Hero Image === */
         .hero {
             width: 100%;
-            max-height: 400px;
+            max-height: 520px;
             overflow: hidden;
             position: relative;
         }
         .hero img {
             width: 100%;
-            height: 400px;
+            height: 520px;
             object-fit: cover;
-            object-position: center;
+            object-position: center 30%;
             display: block;
         }
         .hero::after {
@@ -102,7 +102,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 60%;
+            height: 50%;
             background: linear-gradient(to bottom, transparent, var(--bg));
             pointer-events: none;
         }
@@ -112,8 +112,8 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 30%;
-            background: linear-gradient(to top, transparent, rgba(10, 10, 16, 0.3));
+            height: 25%;
+            background: linear-gradient(to top, transparent, rgba(10, 10, 16, 0.2));
             pointer-events: none;
             z-index: 1;
         }
@@ -121,7 +121,10 @@
             background: linear-gradient(to bottom, transparent, var(--bg));
         }
         [data-theme="light"] .hero::before {
-            background: linear-gradient(to top, transparent, rgba(250, 250, 250, 0.3));
+            background: linear-gradient(to top, transparent, rgba(250, 250, 250, 0.2));
+        }
+        @media (max-width: 640px) {
+            .hero, .hero img { height: 350px; max-height: 350px; }
         }
 
         .article-header {
@@ -130,7 +133,7 @@
             margin: 0 auto;
         }
         .article-header.has-hero {
-            margin-top: -4rem;
+            margin-top: -5rem;
         }
         .back-link {
             color: var(--text-muted);
@@ -485,7 +488,7 @@
     </button>
 
     <div class="hero">
-        <img src="hero-cubes.jpg" alt="Abstract 3D network architecture" loading="eager">
+        <img src="hero-zt.jpg" alt="Modern glass skyscrapers viewed from below" loading="eager">
     </div>
 
     <div class="article-header has-hero">
