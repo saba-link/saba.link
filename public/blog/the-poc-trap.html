@@ -12,26 +12,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0b0b0d;
-            --card-bg: #141419;
-            --card-bg-hover: #1a1a22;
+            --bg: #0a0a10;
+            --card-bg: rgba(20, 20, 30, 0.7);
+            --card-bg-hover: rgba(26, 26, 38, 0.8);
             --text: #e4e4e7;
             --text-muted: #71717a;
-            --accent: #3b82f6;
-            --accent-soft: rgba(59, 130, 246, 0.08);
-            --border: #27272a;
-            --glow: rgba(59, 130, 246, 0.15);
+            --accent: #6366f1;
+            --accent-soft: rgba(99, 102, 241, 0.08);
+            --border: rgba(255, 255, 255, 0.06);
+            --glow: rgba(99, 102, 241, 0.2);
         }
         [data-theme="light"] {
-            --bg: #ffffff;
-            --card-bg: #f8f9fa;
-            --card-bg-hover: #f0f1f3;
+            --bg: #fafafa;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-bg-hover: rgba(255, 255, 255, 0.95);
             --text: #1a1a2e;
             --text-muted: #64748b;
-            --accent: #0677D4;
-            --accent-soft: rgba(6, 119, 212, 0.06);
-            --border: #e2e8f0;
-            --glow: rgba(6, 119, 212, 0.1);
+            --accent: #4f46e5;
+            --accent-soft: rgba(79, 70, 229, 0.06);
+            --border: rgba(0, 0, 0, 0.06);
+            --glow: rgba(79, 70, 229, 0.12);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -40,7 +40,31 @@
             color: var(--text);
             line-height: 1.7;
             min-height: 100vh;
+            position: relative;
         }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60vh;
+            background: radial-gradient(ellipse at 30% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 0%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        [data-theme="light"] body::before {
+            background: radial-gradient(ellipse at 30% 0%, rgba(79, 70, 229, 0.04) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 0%, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+        body > * { position: relative; z-index: 1; }
         .article-header {
             padding: 4rem 1.5rem 3rem;
             max-width: 720px;
@@ -62,7 +86,7 @@
             display: inline-block;
             padding: 0.3rem 0.85rem;
             background: var(--accent-soft);
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.2);
             border-radius: 999px;
             font-size: 0.7rem;
             font-weight: 500;
@@ -71,7 +95,7 @@
             letter-spacing: 0.08em;
             margin-bottom: 1.25rem;
         }
-        [data-theme="light"] .tag { border-color: rgba(6, 119, 212, 0.2); }
+        [data-theme="light"] .tag { border-color: rgba(79, 70, 229, 0.2); }
         h1 {
             font-size: 2.5rem;
             font-weight: 700;
@@ -116,7 +140,7 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, var(--accent), #8b5cf6, var(--accent));
+            background: linear-gradient(90deg, var(--accent), #a78bfa, var(--accent));
             background-size: 200% 100%;
             animation: shimmer 3s ease-in-out infinite;
         }
@@ -189,6 +213,11 @@
             font-size: 0.85rem;
         }
         footer a { color: var(--accent); text-decoration: none; }
+
+        .post, .status-card, .post-link {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
         .theme-toggle {
             position: fixed; top: 1.5rem; right: 1.5rem; z-index: 10;
             width: 40px; height: 40px; border-radius: 50%;
