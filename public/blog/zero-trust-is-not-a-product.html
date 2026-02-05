@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zero Trust is not a product - Sebastian Stein</title>
     <meta name="description" content="There's a slide I've seen hundreds of times. It shows a before-and-after: castle-and-moat on the left, Zero Trust on the right. The implication is clear - buy this product, get Zero Trust. It's a good slide. It's also misleading.">
-    <meta name="robots" content="noindex">
+    <!-- <meta name="robots" content="noindex"> -->
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -124,50 +124,44 @@
             margin: 0 auto;
             padding: 3rem 1.5rem;
         }
-        .status-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 3rem 2.5rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .status-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), #a78bfa, var(--accent));
-            background-size: 200% 100%;
-            animation: shimmer 3s ease-in-out infinite;
-        }
-        @keyframes shimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        .status-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            background: var(--accent-soft);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 1.5rem;
-        }
-        .status-card h2 {
-            font-size: 1.1rem;
+        .prose h2 {
+            font-size: 1.4rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin: 2.5rem 0 1rem;
+            letter-spacing: -0.02em;
+            color: var(--text);
         }
-        .status-card p {
+        .prose p {
+            margin-bottom: 1.25rem;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+        .prose ul {
+            margin: 1rem 0 1.5rem 1.5rem;
+            line-height: 1.8;
+        }
+        .prose li {
+            margin-bottom: 0.4rem;
+        }
+        .prose ol {
+            margin: 1rem 0 1.5rem 1.5rem;
+            line-height: 1.8;
+        }
+        .prose ol li {
+            margin-bottom: 0.75rem;
+        }
+        .prose strong {
+            font-weight: 600;
+            color: var(--text);
+        }
+        .prose em {
+            font-style: italic;
             color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.6;
+        }
+        .read-time {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
         }
         .other-posts {
             margin-top: 3rem;
@@ -247,21 +241,91 @@
         <a href="./" class="back-link">← All posts</a>
         <span class="tag">Zero Trust</span>
         <h1>Zero Trust is not a product</h1>
-        <p class="excerpt">There's a slide I've seen hundreds of times. It shows a before-and-after: castle-and-moat on the left, Zero Trust on the right. The implication is clear - buy this product, get Zero Trust. It's a good slide. It's also misleading.</p>
+        <p class="excerpt">There's a slide I've seen hundreds of times. It shows a before-and-after: castle-and-moat on the left, Zero Trust on the right. Buy this product, get Zero Trust. It's a good slide. It's also misleading.</p>
+        <p class="read-time">8 min read</p>
     </div>
 
     <div class="divider"><hr></div>
 
-    <div class="content">
-        <div class="status-card">
-            <div class="status-icon">✍️</div>
-            <h2>This post is being reviewed</h2>
-            <p>Come by again in a couple of days.</p>
-        </div>
+    <div class="content prose">
+        <p>I spent eight years selling Zero Trust solutions. I've seen large enterprise deals close with high expectations of transformation. Some delivered. Many didn't. The difference was rarely the product.</p>
+
+        <h2>The product fallacy</h2>
+        <p>Zero Trust is an architecture philosophy. It's a set of principles: verify explicitly, assume breach, least privilege access. You can't buy principles. You can only buy tools that help you implement them, if you're ready to do the work.</p>
+        <p>The problem starts when vendors (and I've been guilty of this) position their product as <em>the</em> Zero Trust solution. ZPA gets you Zero Trust for applications. ZTNA gets you Zero Trust for networks. But you can deploy these tools and still not have Zero Trust.</p>
+        <p>I've seen organizations with full SASE stacks that still:</p>
+        <ul>
+            <li>Grant standing admin access to production systems</li>
+            <li>Allow lateral movement because "the firewall rules are too complex to change"</li>
+            <li>Have no idea which identities access which resources</li>
+            <li>Trust everything inside the corporate network by default</li>
+        </ul>
+        <p>They bought Zero Trust. They don't have Zero Trust.</p>
+
+        <h2>What made the difference</h2>
+        <p>The organizations that succeeded didn't just buy a product. They went on a journey. And they didn't go alone.</p>
+        <p>The best outcomes I've seen happened when customers partnered with vendor teams, Solution Architects, Field CxOs, Senior SEs, to build something together. Not because we had all the answers. We didn't. We had no real visibility into their internal politics, their legacy debt, their capacity constraints. But we could help with the high-level design. We could think through the operating model. We could share patterns from other deployments.</p>
+        <p>Customers who engaged in that kind of strategic conversation, who built a transformation roadmap instead of just a deployment plan, were the ones who could carry the work forward internally.</p>
+        <p>The customers who expected the product to do the transformation for them, struggled.</p>
+
+        <h2>Groups, not individuals</h2>
+        <p>Something that surprised me was that successful Zero Trust deployments often didn't start with individual user access decisions.</p>
+        <p>For most of our ZPA projects, we looked at groups, not individuals. What does this team need access to? What does this department require? You can't realistically define policies for thousands of individual users. You define them for roles, for functions, for business units.</p>
+        <p>The granular, per-user policies? Those were reserved for crown jewels, the systems where you genuinely need to know exactly who touches what. For everything else, group-based policies were the only way to scale.</p>
+        <p>This seems obvious in hindsight, but I've seen plenty of projects stall because someone insisted on defining individual access for everyone. That's not Zero Trust. That's a spreadsheet that will never be finished.</p>
+
+        <h2>Take the users off the network</h2>
+        <p>This is the single most impactful thing you can do, and it can happen fast.</p>
+        <p>A user who needs access to five cloud apps, two SaaS platforms and a legacy application does not need an IP address in your corporate network. They don't need a VPN tunnel. They don't need to be "inside."</p>
+        <p>With a Zero Trust approach, an authenticated user connects to a broker that gives them access to a defined set of applications. No network access. No lateral movement. No attack surface.</p>
+        <p>I've seen this reduce external exposure within days. No more reverse proxies. No more VPN gateways. No more enterprise applications exposed to the internet. The user authenticates, gets access to their apps, and that's it. During a learning phase you can start broad and tighten over time. But even on day one, the user has no IP in your network.</p>
+        <p>That's not a theoretical benefit. That's a concrete security improvement you can measure: count your externally exposed services before and after. The difference is dramatic.</p>
+
+        <h2>Quick wins are real, but they're not the destination</h2>
+        <p>I want to be clear: Zero Trust products can deliver fast, meaningful security improvements.</p>
+        <p>I've seen ZPA deployments that, within days, made it dramatically harder for a simple attacker, ransomware, opportunistic threats, to move laterally through an organization. Applications that were previously exposed to the entire network suddenly weren't. That's real value, and it can happen fast.</p>
+        <p>But that's the starting point, not the finish line. The quick wins buy you time and credibility. The long-term transformation, identity hygiene, least privilege enforcement, continuous verification, that takes years.</p>
+
+        <h2>The honest conversation</h2>
+        <p>When I had real conversations with customers, the ones after the sales pitch, when we were actually planning deployment, the product became 20% of the discussion. The other 80% was:</p>
+        <ul>
+            <li>How do we inventory what we have?</li>
+            <li>Who owns application access decisions?</li>
+            <li>What's our identity hygiene like?</li>
+            <li>How do we handle exceptions without creating permanent holes?</li>
+            <li>Who's going to operate this day-to-day?</li>
+        </ul>
+        <p>The customers who asked these questions early succeeded. The ones who wanted the product to answer these questions for them didn't.</p>
+
+        <h2>Post-sales matters more than the sales org thinks</h2>
+        <p>One factor that consistently predicted success: strong post-sales engagement, starting during the sales process.</p>
+        <p>When implementation teams, whether from the vendor or a partner, were involved before the deal closed, projects had a head start. The customer felt supported, not sold to. Trust was already there. The transition from "buying" to "building" was seamless.</p>
+        <p>When post-sales was an afterthought, brought in only after signatures, projects struggled to find their footing. The relationship had to be rebuilt from scratch.</p>
+        <p>If you're evaluating vendors, ask about this. Who will help you implement? When do they get involved? How much continuity is there between the sales team and the delivery team?</p>
+
+        <h2>What I'd tell someone evaluating Zero Trust</h2>
+        <ol>
+            <li><strong>Take users off the network.</strong> If a user needs access to applications, give them access to applications. Not to your network. This alone eliminates a huge attack surface and can happen in days.</li>
+            <li><strong>Start with identity.</strong> If your identity infrastructure is a mess, no Zero Trust product will save you. Clean up Active Directory. Implement MFA everywhere. Know who your users are.</li>
+            <li><strong>Map your access.</strong> Before you can enforce least privilege, you need to know what access exists. This is tedious. There's no shortcut.</li>
+            <li><strong>Think in groups.</strong> Don't try to define access for every individual. Think about roles, teams, functions. Save the granular work for your most critical systems.</li>
+            <li><strong>Take the quick wins.</strong> Fast improvements to your security posture build credibility and buy time for the harder work.</li>
+            <li><strong>Budget for the non-product parts.</strong> Implementation services, training, process redesign, ongoing operations. The license is the beginning, not the end.</li>
+            <li><strong>Get post-sales involved early.</strong> The people who will help you implement should be part of the conversation before you sign.</li>
+        </ol>
+
+        <h2>The reality</h2>
+        <p>Zero Trust, done right, is hard. It requires changing how people work. It surfaces problems that were easier to ignore.</p>
+        <p>A product can make this easier. A product cannot make this unnecessary.</p>
+        <p>The best deployments I've seen weren't the biggest deals. They were the ones where the customer was ready to do the work. Where the product was a tool, not a magic wand. Where there was a genuine partnership between customer and vendor.</p>
+        <p>Zero Trust is not a product. It's a commitment.</p>
 
         <div class="other-posts">
             <h3>More from the blog</h3>
-            <a href="why-i-left-after-8-years" class="post-link">Why I left after 8 years <span class="arrow">→</span></a><a href="notes-on-being-a-sales-engineer" class="post-link">Notes on being a Sales Engineer <span class="arrow">→</span></a><a href="vpn-is-not-dead" class="post-link">VPN is not dead <span class="arrow">→</span></a><a href="the-poc-trap" class="post-link">The POC trap <span class="arrow">→</span></a>
+            <a href="why-i-left-after-8-years" class="post-link">Why I left after 8 years <span class="arrow">→</span></a>
+            <a href="notes-on-being-a-sales-engineer" class="post-link">Notes on being a Sales Engineer <span class="arrow">→</span></a>
+            <a href="vpn-is-not-dead" class="post-link">VPN is not dead <span class="arrow">→</span></a>
+            <a href="the-poc-trap" class="post-link">The POC trap <span class="arrow">→</span></a>
         </div>
     </div>
 
