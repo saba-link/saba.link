@@ -8,32 +8,34 @@
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0b0b0d;
             --card-bg: #141419;
+            --card-bg-hover: #1a1a22;
             --text: #e4e4e7;
             --text-muted: #71717a;
             --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.08);
             --border: #27272a;
+            --glow: rgba(59, 130, 246, 0.15);
         }
-        
+
         [data-theme="light"] {
             --bg: #ffffff;
             --card-bg: #f8f9fa;
+            --card-bg-hover: #f0f1f3;
             --text: #1a1a2e;
             --text-muted: #64748b;
             --accent: #0677D4;
+            --accent-soft: rgba(6, 119, 212, 0.06);
             --border: #e2e8f0;
+            --glow: rgba(6, 119, 212, 0.1);
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
@@ -41,143 +43,207 @@
             line-height: 1.7;
             min-height: 100vh;
         }
-        
+
         .container {
-            max-width: 680px;
+            max-width: 720px;
             margin: 0 auto;
             padding: 4rem 1.5rem;
         }
-        
+
         header {
-            margin-bottom: 4rem;
+            margin-bottom: 3.5rem;
         }
-        
+
         .back-link {
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
+            gap: 0.4rem;
+            margin-bottom: 2.5rem;
             transition: color 0.2s;
+            letter-spacing: 0.02em;
         }
-        
-        .back-link:hover {
-            color: var(--accent);
-        }
-        
+
+        .back-link:hover { color: var(--accent); }
+
         h1 {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
         }
-        
+
         .subtitle {
             color: var(--text-muted);
             font-size: 1.1rem;
+            font-weight: 300;
+            line-height: 1.6;
         }
-        
+
+        .post-count {
+            display: inline-block;
+            margin-top: 1.25rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+        }
+
         .posts {
             display: flex;
             flex-direction: column;
-            gap: 1px;
-            background: var(--border);
-            border-radius: 12px;
-            overflow: hidden;
+            gap: 1rem;
         }
-        
+
         .post {
+            display: block;
             background: var(--card-bg);
-            padding: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.75rem 2rem;
             text-decoration: none;
             color: inherit;
-            transition: background 0.2s;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .post::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
         .post:hover {
-            background: var(--bg);
+            background: var(--card-bg-hover);
+            border-color: rgba(59, 130, 246, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
-        
+
+        [data-theme="light"] .post:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .post:hover::before { opacity: 1; }
+
+        .post-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
         .post-title {
-            font-size: 1.1rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
             color: var(--text);
+            line-height: 1.4;
+            letter-spacing: -0.01em;
         }
-        
+
+        .post-arrow {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            transition: all 0.25s;
+            margin-top: 0.15rem;
+        }
+
+        .post:hover .post-arrow {
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
         .post-excerpt {
             color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 0.75rem;
+            font-size: 0.92rem;
+            margin-bottom: 1rem;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            line-height: 1.7;
         }
-        
+
         .post-meta {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .tag {
-            background: var(--bg);
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            color: var(--accent);
-        }
-        
-        [data-theme="light"] .tag {
-            background: rgba(6, 119, 212, 0.1);
-        }
-        
-        .theme-toggle {
-            position: fixed;
-            top: 1.5rem;
-            right: 1.5rem;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 1px solid var(--border);
-            background: var(--card-bg);
-            cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
+            gap: 0.75rem;
+            font-size: 0.78rem;
         }
-        
-        .theme-toggle:hover {
-            border-color: var(--accent);
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.7rem;
+            background: var(--accent-soft);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
-        
-        .theme-toggle svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--text);
+
+        [data-theme="light"] .tag {
+            border-color: rgba(6, 119, 212, 0.15);
         }
-        
-        .sun-icon { display: block; }
-        .moon-icon { display: none; }
-        
-        [data-theme="light"] .sun-icon { display: none; }
-        [data-theme="light"] .moon-icon { display: block; }
-        
+
+        .read-time {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .dot {
+            color: var(--border);
+            font-size: 0.5rem;
+        }
+
         footer {
             margin-top: 4rem;
             padding-top: 2rem;
             border-top: 1px solid var(--border);
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
-        
-        footer a {
-            color: var(--accent);
-            text-decoration: none;
+
+        footer a { color: var(--accent); text-decoration: none; }
+
+        .theme-toggle {
+            position: fixed; top: 1.5rem; right: 1.5rem; z-index: 10;
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 1px solid var(--border); background: var(--card-bg);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px var(--glow);
+        }
+
+        .theme-toggle svg { width: 18px; height: 18px; fill: var(--text); }
+        .sun-icon { display: block; } .moon-icon { display: none; }
+        [data-theme="light"] .sun-icon { display: none; }
+        [data-theme="light"] .moon-icon { display: block; }
+
+        @media (max-width: 640px) {
+            .container { padding: 3rem 1.25rem; }
+            h1 { font-size: 1.75rem; }
+            .post { padding: 1.25rem 1.5rem; }
+            .post-title { font-size: 1.05rem; }
         }
     </style>
 </head>
@@ -189,79 +255,94 @@
 
     <div class="container">
         <header>
-            <a href="../" class="back-link">← Back to home</a>
+            <a href="../" class="back-link">← Home</a>
             <h1>Blog</h1>
             <p class="subtitle">Thoughts on Zero Trust, Sales Engineering, and building a career in enterprise tech.</p>
+            <span class="post-count">5 posts</span>
         </header>
-        
+
         <div class="posts">
             <a href="zero-trust-is-not-a-product" class="post">
-                <h2 class="post-title">Zero Trust is not a product</h2>
+                <div class="post-header">
+                    <h2 class="post-title">Zero Trust is not a product</h2>
+                    <span class="post-arrow">→</span>
+                </div>
                 <p class="post-excerpt">There's a slide I've seen hundreds of times. It shows a before-and-after: castle-and-moat on the left, Zero Trust on the right. The implication is clear - buy this product, get Zero Trust. It's a good slide. It's also misleading.</p>
                 <div class="post-meta">
-                    <span>8 min read</span>
                     <span class="tag">Zero Trust</span>
+                    <span class="dot">●</span>
+                    <span class="read-time">8 min read</span>
                 </div>
             </a>
-            
+
             <a href="why-i-left-after-8-years" class="post">
-                <h2 class="post-title">Why I left after 8 years</h2>
+                <div class="post-header">
+                    <h2 class="post-title">Why I left after 8 years</h2>
+                    <span class="post-arrow">→</span>
+                </div>
                 <p class="post-excerpt">Eight years is a long time at one company. Especially in tech, where two years feels like a career. I joined Zscaler in 2018 as an individual contributor. Left in late 2025 as Major Accounts Manager. So why leave?</p>
                 <div class="post-meta">
-                    <span>7 min read</span>
                     <span class="tag">Career</span>
+                    <span class="dot">●</span>
+                    <span class="read-time">7 min read</span>
                 </div>
             </a>
-            
+
             <a href="notes-on-being-a-sales-engineer" class="post">
-                <h2 class="post-title">Notes on being a Sales Engineer</h2>
-                <p class="post-excerpt">I've been a Sales Engineer for most of my career. It's a role that's often misunderstood - sometimes by the companies that hire for it. These are some notes on what the job actually is.</p>
+                <div class="post-header">
+                    <h2 class="post-title">Notes on being a Sales Engineer</h2>
+                    <span class="post-arrow">→</span>
+                </div>
+                <p class="post-excerpt">I've been a Sales Engineer for most of my career. It's a role that's often misunderstood, sometimes by the companies that hire for it. These are some notes on what the job actually is.</p>
                 <div class="post-meta">
-                    <span>12 min read</span>
                     <span class="tag">Sales Engineering</span>
+                    <span class="dot">●</span>
+                    <span class="read-time">12 min read</span>
                 </div>
             </a>
-            
+
             <a href="vpn-is-not-dead" class="post">
-                <h2 class="post-title">VPN is not dead</h2>
+                <div class="post-header">
+                    <h2 class="post-title">VPN is not dead</h2>
+                    <span class="post-arrow">→</span>
+                </div>
                 <p class="post-excerpt">I've spent years selling Zero Trust solutions. Part of the pitch was always: VPN is dead. Legacy. Here's the uncomfortable truth: VPN is not dead. And pretending it is creates problems.</p>
                 <div class="post-meta">
-                    <span>5 min read</span>
                     <span class="tag">Hot Take</span>
+                    <span class="dot">●</span>
+                    <span class="read-time">5 min read</span>
                 </div>
             </a>
-            
+
             <a href="the-poc-trap" class="post">
-                <h2 class="post-title">The POC trap</h2>
-                <p class="post-excerpt">"Let's do a POC." Four words that can save a deal or kill it. In enterprise software, the proof of concept has become reflexive - requested by default, granted without question. That's a problem.</p>
+                <div class="post-header">
+                    <h2 class="post-title">The POC trap</h2>
+                    <span class="post-arrow">→</span>
+                </div>
+                <p class="post-excerpt">"Let's do a POC." Four words that can save a deal or kill it. In enterprise software, the proof of concept has become reflexive, requested by default, granted without question. That's a problem.</p>
                 <div class="post-meta">
-                    <span>6 min read</span>
                     <span class="tag">Enterprise Sales</span>
+                    <span class="dot">●</span>
+                    <span class="read-time">6 min read</span>
                 </div>
             </a>
         </div>
-        
+
         <footer>
             <p><a href="../">Sebastian Stein</a> · Sales Engineering Leader · Stuttgart</p>
         </footer>
     </div>
-    
+
     <script>
         function toggleTheme() {
             const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
+            const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', next);
             localStorage.setItem('theme', next);
         }
-        
-        // Load saved theme
         const saved = localStorage.getItem('theme');
-        if (saved) {
-            document.documentElement.setAttribute('data-theme', saved);
-        } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-            document.documentElement.setAttribute('data-theme', 'light');
-        }
+        if (saved) document.documentElement.setAttribute('data-theme', saved);
+        else if (window.matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.setAttribute('data-theme', 'light');
     </script>
 </body>
 </html>
