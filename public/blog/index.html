@@ -92,6 +92,39 @@
 
         .back-link:hover { color: var(--accent); }
 
+        .author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .author-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .author-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .author-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .author-role {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
         h1 {
             font-size: 2.5rem;
             font-weight: 700;
@@ -285,6 +318,13 @@
     <div class="container">
         <header>
             <a href="../" class="back-link">← Home</a>
+            <div class="author">
+                <img src="../avatar.jpg" alt="Sebastian Stein" class="author-avatar">
+                <div class="author-info">
+                    <span class="author-name">Sebastian Stein</span>
+                    <span class="author-role">Sales Engineering Leader · Stuttgart</span>
+                </div>
+            </div>
             <h1>Blog</h1>
             <p class="subtitle">Thoughts on Zero Trust, Sales Engineering, and building a career in enterprise tech.</p>
             <span class="post-count">5 posts</span>
