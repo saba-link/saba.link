@@ -147,19 +147,29 @@ function initAudioPlayer(audioSrc, chapters) {
                     }, 150);
                 };
                 
-                // Safari/iOS: Must wait for audio to actually be playing before seek works
+                // Must wait for audio to actually be playing before seek works
                 if (audio.paused) {
                     console.log('[AudioPlayer] Audio paused, starting playback first...');
                     const onPlaying = () => {
-                        console.log('[AudioPlayer] Playing event fired, now seeking...');
+                        console.log('[AudioPlayer] Playing event fired, waiting 500ms then seeking...');
                         audio.removeEventListener('playing', onPlaying);
-                        // Small delay to let Safari settle
-                        setTimeout(doSeek, 100);
+                        // Longer delay - some browsers need time to stabilize
+                        setTimeout(doSeek, 500);
                     };
                     audio.addEventListener('playing', onPlaying);
                     audio.play().catch(e => console.log('[AudioPlayer] Play rejected:', e));
                 } else {
-                    doSeek();
+                    // Already playing - try fastSeek if available, else currentTime
+                    if (typeof audio.fastSeek === 'function') {
+                        console.log('[AudioPlayer] Using fastSeek()...');
+                        audio.fastSeek(targetTime);
+                        setTimeout(() => {
+                            console.log('[AudioPlayer] After fastSeek | actual:', audio.currentTime.toFixed(1));
+                            updateUI();
+                        }, 150);
+                    } else {
+                        doSeek();
+                    }
                 }
             };
             
