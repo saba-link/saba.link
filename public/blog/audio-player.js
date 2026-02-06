@@ -234,9 +234,8 @@ function initAudioPlayer(audioSrc, chapters) {
             const updateUI = () => {
                 highlightSection(c.id);
                 chapEl.querySelectorAll('.sp-ch').forEach((el, j) => el.classList.toggle('active', j === idx));
-                if (c.id) {
-                    scrollToSection(c.id);
-                }
+                // Always scroll on chapter click - scrollToSection handles null (intro)
+                scrollToSection(c.id);
                 audioPlayerState.lastCh = idx;
             };
             
@@ -296,9 +295,25 @@ function highlightSection(sectionId) {
 
 /**
  * Scroll to a section with offset for comfortable reading position
- * @param {string} sectionId - Element ID to scroll to
+ * @param {string|null} sectionId - Element ID to scroll to, or null for top of article
  */
 function scrollToSection(sectionId) {
+    if (!sectionId) {
+        // Intro section - scroll to top of article (first paragraph or content div)
+        const content = document.querySelector('.content.prose') || document.querySelector('.content');
+        if (content) {
+            const rect = content.getBoundingClientRect();
+            const offset = window.innerHeight * 0.25;
+            window.scrollTo({
+                top: window.scrollY + rect.top - offset,
+                behavior: 'smooth'
+            });
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        return;
+    }
+    
     const h = document.getElementById(sectionId);
     if (!h) return;
     
