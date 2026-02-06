@@ -117,7 +117,7 @@ function initAudioPlayer(audioSrc, chapters) {
 function highlightSection(sectionId) {
     // Remove existing highlights
     document.querySelectorAll('.in-active-section').forEach(el => {
-        el.classList.remove('in-active-section', 'section-heading');
+        el.classList.remove('in-active-section', 'section-heading', 'section-last');
     });
     
     if (!sectionId) return;
@@ -128,11 +128,18 @@ function highlightSection(sectionId) {
     // Highlight the heading
     h.classList.add('in-active-section', 'section-heading');
     
-    // Highlight all siblings until next H2
+    // Highlight all siblings until next H2, track last one
     let el = h.nextElementSibling;
+    let lastEl = h;
     while (el && !el.matches('h2')) {
         el.classList.add('in-active-section');
+        lastEl = el;
         el = el.nextElementSibling;
+    }
+    
+    // Mark the last element for bottom border-radius
+    if (lastEl) {
+        lastEl.classList.add('section-last');
     }
 }
 
