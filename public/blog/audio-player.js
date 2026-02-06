@@ -72,48 +72,33 @@ function initAudioPlayer(audioSrc, chapters) {
             // Problem: Browser can only seek to buffered positions. If not buffered, seek fails silently.
             
             const attemptSeek = () => {
-                const beforeSeek = audio.currentTime;
-                audio.currentTime = c.s;
+                let retryCount = 0;
+                const maxRetries = 20;
+                const retryInterval = 250; // ms
                 
-                // Check if seek actually worked (give it a small tolerance)
-                setTimeout(() => {
-                    const afterSeek = audio.currentTime;
-                    console.log('[AudioPlayer] Seek result | target:', c.s, '| actual:', afterSeek, '| diff:', Math.abs(afterSeek - c.s));
+                const trySeek = () => {
+                    audio.currentTime = c.s;
                     
-                    if (Math.abs(afterSeek - c.s) > 2) {
-                        // Seek failed - position not buffered yet
-                        console.log('[AudioPlayer] Seek failed, waiting for buffer...');
+                    setTimeout(() => {
+                        const afterSeek = audio.currentTime;
+                        const diff = Math.abs(afterSeek - c.s);
+                        console.log('[AudioPlayer] Seek attempt', retryCount + 1, '| target:', c.s, '| actual:', afterSeek, '| diff:', diff);
                         
-                        // Wait for progress event (more data buffered) and retry
-                        const onProgress = () => {
-                            console.log('[AudioPlayer] More data buffered, retrying seek...');
-                            audio.currentTime = c.s;
-                            
-                            setTimeout(() => {
-                                if (Math.abs(audio.currentTime - c.s) <= 2) {
-                                    console.log('[AudioPlayer] Seek succeeded after buffer');
-                                    audio.removeEventListener('progress', onProgress);
-                                    updateUI();
-                                }
-                            }, 100);
-                        };
-                        audio.addEventListener('progress', onProgress);
-                        
-                        // Also try on timeupdate as fallback
-                        const onTimeUpdate = () => {
-                            if (Math.abs(audio.currentTime - c.s) <= 2) {
-                                console.log('[AudioPlayer] Seek succeeded via timeupdate');
-                                audio.removeEventListener('timeupdate', onTimeUpdate);
-                                audio.removeEventListener('progress', onProgress);
-                                updateUI();
-                            }
-                        };
-                        audio.addEventListener('timeupdate', onTimeUpdate);
-                    } else {
-                        console.log('[AudioPlayer] Seek succeeded immediately');
-                        updateUI();
-                    }
-                }, 50);
+                        if (diff <= 2) {
+                            console.log('[AudioPlayer] Seek succeeded!');
+                            updateUI();
+                        } else if (retryCount < maxRetries) {
+                            retryCount++;
+                            console.log('[AudioPlayer] Seek failed, retry', retryCount, 'in', retryInterval, 'ms...');
+                            setTimeout(trySeek, retryInterval);
+                        } else {
+                            console.log('[AudioPlayer] Seek failed after', maxRetries, 'retries. Playing from current position.');
+                            updateUI();
+                        }
+                    }, 100);
+                };
+                
+                trySeek();
             };
             
             const updateUI = () => {
