@@ -74,28 +74,74 @@ function initAudioPlayer(audioSrc, chapters) {
             const attemptSeek = () => {
                 const targetTime = c.s;
                 
+                // Check if target is actually buffered
+                const isBuffered = (time) => {
+                    for (let i = 0; i < audio.buffered.length; i++) {
+                        if (time >= audio.buffered.start(i) && time <= audio.buffered.end(i)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+                
+                const getBufferedEnd = () => {
+                    if (audio.buffered.length > 0) {
+                        return audio.buffered.end(audio.buffered.length - 1);
+                    }
+                    return 0;
+                };
+                
                 const doSeek = () => {
-                    console.log('[AudioPlayer] Executing seek to', targetTime, '| currentTime before:', audio.currentTime);
+                    const bufferedEnd = getBufferedEnd();
+                    const targetBuffered = isBuffered(targetTime);
+                    console.log('[AudioPlayer] Executing seek to', targetTime, '| buffered end:', bufferedEnd.toFixed(1), '| target buffered:', targetBuffered);
+                    
+                    if (!targetBuffered) {
+                        console.log('[AudioPlayer] Target not yet buffered! Waiting for progress...');
+                        // Wait for more buffer
+                        const waitForBuffer = () => {
+                            if (isBuffered(targetTime)) {
+                                console.log('[AudioPlayer] Target now buffered, seeking...');
+                                audio.removeEventListener('progress', waitForBuffer);
+                                audio.currentTime = targetTime;
+                                setTimeout(() => {
+                                    console.log('[AudioPlayer] Seek after buffer | actual:', audio.currentTime);
+                                    updateUI();
+                                }, 100);
+                            }
+                        };
+                        audio.addEventListener('progress', waitForBuffer);
+                        // Also check periodically in case progress doesn't fire
+                        let checks = 0;
+                        const checkInterval = setInterval(() => {
+                            checks++;
+                            if (isBuffered(targetTime)) {
+                                clearInterval(checkInterval);
+                                audio.removeEventListener('progress', waitForBuffer);
+                                console.log('[AudioPlayer] Target buffered (via interval), seeking...');
+                                audio.currentTime = targetTime;
+                                setTimeout(() => updateUI(), 100);
+                            } else if (checks > 20) { // 5 seconds max
+                                clearInterval(checkInterval);
+                                audio.removeEventListener('progress', waitForBuffer);
+                                console.log('[AudioPlayer] Gave up waiting for buffer');
+                                updateUI();
+                            }
+                        }, 250);
+                        return;
+                    }
+                    
                     audio.currentTime = targetTime;
                     
                     // Verify after a short delay
                     setTimeout(() => {
                         const diff = Math.abs(audio.currentTime - targetTime);
-                        console.log('[AudioPlayer] Seek result | target:', targetTime, '| actual:', audio.currentTime, '| diff:', diff);
+                        console.log('[AudioPlayer] Seek result | target:', targetTime, '| actual:', audio.currentTime.toFixed(1), '| diff:', diff.toFixed(1));
                         
                         if (diff <= 2) {
                             console.log('[AudioPlayer] Seek succeeded!');
                         } else {
-                            console.log('[AudioPlayer] Seek failed (Safari/iOS issue). Will retry on next timeupdate...');
-                            // Safari workaround: retry seek on next timeupdate
-                            const retryOnTimeUpdate = () => {
-                                if (Math.abs(audio.currentTime - targetTime) > 2) {
-                                    console.log('[AudioPlayer] Retrying seek via timeupdate...');
-                                    audio.currentTime = targetTime;
-                                }
-                                audio.removeEventListener('timeupdate', retryOnTimeUpdate);
-                            };
-                            audio.addEventListener('timeupdate', retryOnTimeUpdate);
+                            console.log('[AudioPlayer] Seek failed despite buffer. Safari bug.');
                         }
                         updateUI();
                     }, 150);
