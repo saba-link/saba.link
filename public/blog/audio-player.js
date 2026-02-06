@@ -72,27 +72,49 @@ function initAudioPlayer(audioSrc, chapters) {
             // Problem: Browser can only seek to buffered positions. If not buffered, seek fails silently.
             
             const attemptSeek = () => {
-                // Store target for later retry via seeked event
                 const targetTime = c.s;
                 
-                // Set up one-time seeked listener to verify
-                const onSeeked = () => {
-                    const diff = Math.abs(audio.currentTime - targetTime);
-                    console.log('[AudioPlayer] Seeked event | target:', targetTime, '| actual:', audio.currentTime, '| diff:', diff);
+                const doSeek = () => {
+                    console.log('[AudioPlayer] Executing seek to', targetTime, '| currentTime before:', audio.currentTime);
+                    audio.currentTime = targetTime;
                     
-                    if (diff <= 2) {
-                        console.log('[AudioPlayer] Seek succeeded!');
-                    } else {
-                        console.log('[AudioPlayer] Seek landed at wrong position. User can retry when more is buffered.');
-                    }
-                    updateUI();
-                    audio.removeEventListener('seeked', onSeeked);
+                    // Verify after a short delay
+                    setTimeout(() => {
+                        const diff = Math.abs(audio.currentTime - targetTime);
+                        console.log('[AudioPlayer] Seek result | target:', targetTime, '| actual:', audio.currentTime, '| diff:', diff);
+                        
+                        if (diff <= 2) {
+                            console.log('[AudioPlayer] Seek succeeded!');
+                        } else {
+                            console.log('[AudioPlayer] Seek failed (Safari/iOS issue). Will retry on next timeupdate...');
+                            // Safari workaround: retry seek on next timeupdate
+                            const retryOnTimeUpdate = () => {
+                                if (Math.abs(audio.currentTime - targetTime) > 2) {
+                                    console.log('[AudioPlayer] Retrying seek via timeupdate...');
+                                    audio.currentTime = targetTime;
+                                }
+                                audio.removeEventListener('timeupdate', retryOnTimeUpdate);
+                            };
+                            audio.addEventListener('timeupdate', retryOnTimeUpdate);
+                        }
+                        updateUI();
+                    }, 150);
                 };
-                audio.addEventListener('seeked', onSeeked);
                 
-                // Attempt the seek once
-                console.log('[AudioPlayer] Attempting seek to', targetTime);
-                audio.currentTime = targetTime;
+                // Safari/iOS: Must wait for audio to actually be playing before seek works
+                if (audio.paused) {
+                    console.log('[AudioPlayer] Audio paused, starting playback first...');
+                    const onPlaying = () => {
+                        console.log('[AudioPlayer] Playing event fired, now seeking...');
+                        audio.removeEventListener('playing', onPlaying);
+                        // Small delay to let Safari settle
+                        setTimeout(doSeek, 100);
+                    };
+                    audio.addEventListener('playing', onPlaying);
+                    audio.play().catch(e => console.log('[AudioPlayer] Play rejected:', e));
+                } else {
+                    doSeek();
+                }
             };
             
             const updateUI = () => {
