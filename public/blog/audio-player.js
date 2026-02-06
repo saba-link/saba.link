@@ -53,10 +53,19 @@ function initAudioPlayer(audioSrc, chapters) {
     // Debug: Log audio state changes
     console.log('[AudioPlayer] Initializing with source:', audioSrc);
     audio.addEventListener('loadstart', () => console.log('[AudioPlayer] loadstart - readyState:', audio.readyState));
-    audio.addEventListener('loadedmetadata', () => console.log('[AudioPlayer] loadedmetadata - readyState:', audio.readyState, 'duration:', audio.duration));
+    audio.addEventListener('loadedmetadata', () => {
+        const seekableEnd = audio.seekable.length > 0 ? audio.seekable.end(0) : 0;
+        console.log('[AudioPlayer] loadedmetadata - readyState:', audio.readyState, 'duration:', audio.duration, 'seekable:', seekableEnd);
+    });
     audio.addEventListener('loadeddata', () => console.log('[AudioPlayer] loadeddata - readyState:', audio.readyState));
-    audio.addEventListener('canplay', () => console.log('[AudioPlayer] canplay - readyState:', audio.readyState));
-    audio.addEventListener('canplaythrough', () => console.log('[AudioPlayer] canplaythrough - readyState:', audio.readyState));
+    audio.addEventListener('canplay', () => {
+        const seekableEnd = audio.seekable.length > 0 ? audio.seekable.end(0) : 0;
+        console.log('[AudioPlayer] canplay - readyState:', audio.readyState, 'seekable:', seekableEnd);
+    });
+    audio.addEventListener('canplaythrough', () => {
+        const seekableEnd = audio.seekable.length > 0 ? audio.seekable.end(0) : 0;
+        console.log('[AudioPlayer] canplaythrough - readyState:', audio.readyState, 'seekable:', seekableEnd);
+    });
     
     // Build chapter list
     chapEl.innerHTML = '';
@@ -91,10 +100,19 @@ function initAudioPlayer(audioSrc, chapters) {
                     return 0;
                 };
                 
+                const getSeekableEnd = () => {
+                    if (audio.seekable.length > 0) {
+                        return audio.seekable.end(audio.seekable.length - 1);
+                    }
+                    return 0;
+                };
+                
                 const doSeek = () => {
                     const bufferedEnd = getBufferedEnd();
+                    const seekableEnd = getSeekableEnd();
                     const targetBuffered = isBuffered(targetTime);
-                    console.log('[AudioPlayer] Executing seek to', targetTime, '| buffered end:', bufferedEnd.toFixed(1), '| target buffered:', targetBuffered);
+                    const targetSeekable = targetTime <= seekableEnd;
+                    console.log('[AudioPlayer] Executing seek to', targetTime, '| buffered:', bufferedEnd.toFixed(1), '| seekable:', seekableEnd.toFixed(1), '| target seekable:', targetSeekable);
                     
                     if (!targetBuffered) {
                         console.log('[AudioPlayer] Target not yet buffered! Waiting for progress...');
