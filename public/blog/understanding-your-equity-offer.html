@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding your equity offer - Sebastian Stein</title>
+    <meta name="description" content="What does '10,000 stock options' actually mean? How to calculate what your equity package is really worth, and the questions you need to ask before signing.">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="blog-common.css">
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
+        <svg class="moon-icon" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+    </button>
+
+    <div class="hero">
+        <img src="hero-equity.jpg" alt="Equity visualization" loading="eager">
+    </div>
+
+    <div class="article-header has-hero">
+        <a href="./" class="back-link">← All posts</a>
+        <span class="tag">Startup Finance</span>
+        <h1>Understanding your equity offer</h1>
+        <p class="excerpt">What does "10,000 stock options" actually mean? How to calculate what your equity package is really worth, and the questions you need to ask before signing.</p>
+        <div class="article-meta">
+            <span class="meta-date">
+                <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                February 4, 2026
+            </span>
+            <span class="meta-dot">●</span>
+            <span class="meta-read">
+                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                10 min read
+            </span>
+        </div>
+    </div>
+
+    <!-- Audio Player -->
+    <div id="stickyPlayer" class="sticky-player">
+        <button class="sp-toggle" onclick="togglePlayer()" title="Minimize">−</button>
+        <div class="sp-content">
+            <div class="sp-header">
+                <span style="font-size:1.2rem">🎧</span>
+                <span style="font-size:0.8rem;color:var(--text-muted)">Listen</span>
+                <select id="speedCtrl" onchange="document.getElementById('blogAudio').playbackRate=parseFloat(this.value)" style="margin-left:auto;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:0.15rem 0.3rem;font-size:0.7rem">
+                    <option value="0.75">0.75x</option>
+                    <option value="1" selected>1x</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2x</option>
+                </select>
+            </div>
+            <audio id="blogAudio" controls style="width:100%;height:36px" preload="metadata"></audio>
+            <div class="sp-chapters" id="spChapters"></div>
+            <div class="sp-auto">
+                <input type="checkbox" id="autoScroll" checked>
+                <label for="autoScroll">Auto-scroll page</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"><hr></div>
+
+    <div class="content prose">
+        <p class="drop-cap">Imagine you're reading an offer letter. The equity section says "10,000 stock options." Sounds generous, right? But that number alone tells you almost nothing.</p>
+
+        <p>10,000 options at a company with 1 million total shares is 1% of the company. 10,000 options at a company with 100 million shares is 0.01%. The difference in potential value is literally 100x.</p>
+
+        <p>After the last post on how startup funding works, you might ask: "Okay, but how do I actually evaluate the equity part of my offer?" This post is the answer.</p>
+
+        <h2 id="the-three-numbers-you-need">The three numbers you need</h2>
+
+        <p>Before you can evaluate anything, you need to get these numbers from the company:</p>
+
+        <ol>
+            <li><strong>Your options/shares granted:</strong> the number in your offer letter</li>
+            <li><strong>Fully diluted shares outstanding:</strong> total shares if everyone exercised everything</li>
+            <li><strong>Strike price and current FMV (409A valuation):</strong> what you pay vs. what it's "worth" today</li>
+        </ol>
+
+        <p>If a company won't give you the fully diluted share count, that's a red flag. Without it, you literally cannot calculate what your offer represents.</p>
+
+        <h2 id="calculating-your-percentage">Calculating your percentage</h2>
+
+        <p>The formula is simple:</p>
+
+        <div class="callout-box">
+            <code>Your ownership (%) = Your options ÷ Fully diluted shares × 100</code>
+        </div>
+
+        <p>Example: 20,000 options ÷ 20,000,000 fully diluted shares = 0.1%</p>
+
+        <p>Now you have a number you can work with. But 0.1% of what?</p>
+
+        <h2 id="what-your-equity-might-be-worth">What your equity might be worth</h2>
+
+        <p>Here's where it gets speculative. You need to estimate what the company could be worth at exit, then apply your percentage (minus dilution from future rounds).</p>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Exit Scenario</th>
+                    <th>Valuation</th>
+                    <th>Your 0.1%</th>
+                    <th>After ~35% tax</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Company fails</td>
+                    <td>€0</td>
+                    <td>€0</td>
+                    <td>€0</td>
+                </tr>
+                <tr>
+                    <td>Acqui-hire</td>
+                    <td>€50M</td>
+                    <td>€50K</td>
+                    <td>~€32K</td>
+                </tr>
+                <tr class="highlight-row">
+                    <td>Solid exit</td>
+                    <td>€500M</td>
+                    <td>€500K</td>
+                    <td>~€325K</td>
+                </tr>
+                <tr>
+                    <td>Home run</td>
+                    <td>€2B</td>
+                    <td>€2M</td>
+                    <td>~€1.3M</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>But wait. There's dilution. If the company raises two more rounds before exit, your 0.1% might become 0.07%. Suddenly that "solid exit" is worth €350K, not €500K.</p>
+
+        <blockquote class="pullquote">The number in your offer letter is the starting point, not the ending point. Dilution, liquidation preferences, and tax all take their cut.</blockquote>
+
+        <h2 id="stock-options-vs-rsus">Stock options vs. RSUs</h2>
+
+        <p>Two different animals. Understanding which you're getting matters.</p>
+
+        <h3>Stock options</h3>
+        <p>You get the <em>right</em> to buy shares at a fixed price (the strike price). If the company's value goes up, you buy low, sell high. If it goes down below your strike, your options are "underwater" and worthless.</p>
+
+        <ul>
+            <li><strong>Strike price:</strong> What you pay to exercise</li>
+            <li><strong>FMV:</strong> What shares are worth today</li>
+            <li><strong>Spread:</strong> FMV minus strike price (your potential gain)</li>
+        </ul>
+
+        <h3>RSUs (Restricted Stock Units)</h3>
+        <p>You get actual shares when they vest, no purchase required. They're always worth <em>something</em> (as long as the stock is above €0). More common at later-stage companies.</p>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Stock Options</th>
+                    <th>RSUs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>You pay to get shares</td>
+                    <td>Yes (strike price)</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>Can be worthless</td>
+                    <td>Yes (if underwater)</td>
+                    <td>Only if stock = €0</td>
+                </tr>
+                <tr>
+                    <td>Upside potential</td>
+                    <td>Higher (if early)</td>
+                    <td>Lower but safer</td>
+                </tr>
+                <tr>
+                    <td>Tax timing</td>
+                    <td>At exercise + sale</td>
+                    <td>At vest + sale</td>
+                </tr>
+                <tr>
+                    <td>Typical at</td>
+                    <td>Early-stage</td>
+                    <td>Late-stage / public</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="the-vesting-schedule">The vesting schedule</h2>
+
+        <p>You don't get your equity upfront. You earn it over time. The standard is:</p>
+
+        <div class="callout-box">
+            <strong>4-year vesting with 1-year cliff</strong><br><br>
+            Year 0-1: Nothing vests (cliff period)<br>
+            Day 366: 25% vests all at once<br>
+            Year 2: 50% total vested (monthly)<br>
+            Year 3: 75% total vested<br>
+            Year 4: 100% vested
+        </div>
+
+        <p>The cliff protects the company. If you leave before 12 months, you get nothing. After the cliff, vesting typically happens monthly.</p>
+
+        <p><strong>Watch for:</strong> Some companies have longer cliffs or backloaded vesting (more equity in later years). Amazon, for example, does 5-15-40-40 over four years. That's very different from 25-25-25-25.</p>
+
+        <h2 id="the-exercise-window-problem">The exercise window problem</h2>
+
+        <p>Here's a trap that catches people: when you leave a company, you typically have 90 days to exercise your vested options. That means you need to come up with cash to buy your shares (sometimes tens of thousands of euros) or lose them.</p>
+
+        <blockquote class="pullquote">If you have 20,000 vested options at a €3 strike price, exercising costs €60,000. That's cash you need within 90 days of leaving, or your options expire worthless.</blockquote>
+
+        <p>Some companies offer extended exercise windows (1-10 years). This is a huge benefit. <span class="hl">Ask about it during negotiations.</span> It rarely appears in the initial offer but can sometimes be negotiated.</p>
+
+        <h2 id="liquidation-preferences-why-your-math-might-be-wrong">Liquidation preferences: why your math might be wrong</h2>
+
+        <p>Here's the ugly truth: investors get paid first.</p>
+
+        <p>When a company exits, investors with "liquidation preferences" get their money back before common shareholders (that's you) see a penny. The standard is 1x non-participating: investors get their investment back, then everyone shares the rest.</p>
+
+        <div class="callout-box">
+            <strong>Example with 1x non-participating preference:</strong><br><br>
+            Investors put in: €50M<br>
+            Exit price: €60M<br><br>
+            1. Investors get €50M first (their money back)<br>
+            2. Remaining €10M splits among all shareholders<br>
+            3. Your 0.1% of €10M = €10K<br><br>
+            Without preferences, your 0.1% of €60M = €60K
+        </div>
+
+        <p>Preferences don't matter much at huge exits (10x+ returns). But at modest exits, they can wipe out most of the value for employees.</p>
+
+        <h2 id="the-equity-vs-salary-trade-off">The equity vs. salary trade-off</h2>
+
+        <p>Companies often frame equity as compensation for below-market salary. Is it worth it?</p>
+
+        <p>You need to think in expected value. Equity is a bet. Most startups fail. A rational calculation:</p>
+
+        <div class="callout-box">
+            <strong>Salary difference over 4 years:</strong> €20K × 4 = €80K<br><br>
+            <strong>Expected value of extra equity:</strong><br>
+            - 40% chance company fails: €0<br>
+            - 30% chance small exit: €50K<br>
+            - 20% chance good exit: €200K<br>
+            - 10% chance home run: €500K<br><br>
+            Expected value: (0.4×0) + (0.3×50K) + (0.2×200K) + (0.1×500K) = €105K<br><br>
+            €105K expected > €80K salary loss = Reasonable trade
+        </div>
+
+        <p>But your risk tolerance matters. €80K in salary is guaranteed. €105K in expected equity value might be €0 in reality. If you need the cash, take the cash.</p>
+
+        <h2 id="red-flags-in-equity-offers">Red flags in equity offers</h2>
+
+        <div class="callout-box">
+            <div class="callout-title">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                Warning signs to watch for
+            </div>
+            <ul>
+                <li><strong>"We can't share the share count"</strong> – no transparency, no deal</li>
+                <li><strong>Strike price equals or exceeds preferred price</strong> – your options might already be overpriced</li>
+                <li><strong>Only 90-day exercise window</strong> – leaves you in a tough spot if you leave</li>
+                <li><strong>No double-trigger acceleration</strong> – you could lose unvested equity in an acquisition</li>
+                <li><strong>Very small option pool</strong> – founders aren't sharing upside with employees</li>
+                <li><strong>No refresh grants mentioned</strong> – what happens after 4 years?</li>
+            </ul>
+        </div>
+
+        <h2 id="questions-to-ask">Questions to ask</h2>
+
+        <p>Before signing, get answers to these:</p>
+
+        <ol>
+            <li><strong>How many fully diluted shares are outstanding?</strong></li>
+            <li><strong>What's the current 409A/FMV valuation?</strong></li>
+            <li><strong>What was the last preferred price?</strong> (What investors paid)</li>
+            <li><strong>What's the post-termination exercise period?</strong></li>
+            <li><strong>Is there double-trigger acceleration?</strong></li>
+            <li><strong>How big is the employee option pool?</strong></li>
+            <li><strong>What are the liquidation preferences?</strong></li>
+            <li><strong>Do you offer refresh grants?</strong></li>
+        </ol>
+
+        <p>A company that gets defensive about these questions is telling you something. Good companies are transparent about equity because they know it's a key part of compensation.</p>
+
+        <h2 id="typical-equity-ranges">Typical equity ranges</h2>
+
+        <p>What's "normal" varies wildly by stage and role. Rough benchmarks for Series A-B companies:</p>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Level</th>
+                    <th>Typical Range (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>VP / C-Level</td>
+                    <td>0.5% - 2.0%</td>
+                </tr>
+                <tr>
+                    <td>Director</td>
+                    <td>0.1% - 0.5%</td>
+                </tr>
+                <tr>
+                    <td>Senior Manager</td>
+                    <td>0.05% - 0.2%</td>
+                </tr>
+                <tr>
+                    <td>Manager</td>
+                    <td>0.03% - 0.1%</td>
+                </tr>
+                <tr class="highlight-row">
+                    <td>Senior IC</td>
+                    <td>0.02% - 0.1%</td>
+                </tr>
+                <tr>
+                    <td>Mid-Level IC</td>
+                    <td>0.01% - 0.05%</td>
+                </tr>
+                <tr>
+                    <td>Junior</td>
+                    <td>0.005% - 0.02%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>Earlier stage = higher percentages but higher risk. A senior IC at a seed company might get 0.5%; the same person at Series C might get 0.05%.</p>
+
+        <h2 id="the-bottom-line">The bottom line</h2>
+
+        <p>Equity isn't free money. It's a bet on the company's future, with real complexity around vesting, dilution, preferences, taxes, and exercise windows.</p>
+
+        <p>Don't just accept the number in your offer letter. Calculate what percentage it represents. Model what that might be worth in different scenarios. Ask the uncomfortable questions.</p>
+
+        <p>And remember: a smaller percentage of a successful company is worth more than a large percentage of one that fails. The equity matters, but the quality of the company matters more.</p>
+
+        <p>Next up: how to actually do due diligence on a startup before you join. The research you should do that most candidates skip.</p>
+
+        <div class="series-nav">
+            <div class="series-title">Startup Finance Series</div>
+            <div class="series-links">
+                <a href="startup-funding-explained">← Part 1: What I wish I'd known about startup funding</a>
+                <a href="understanding-your-equity-offer" class="current">→ Part 2: Understanding your equity offer</a>
+                <a href="#" class="upcoming">○ Part 3: Due diligence as a candidate (coming soon)</a>
+            </div>
+        </div>
+
+        <div class="other-posts">
+            <h3>More from the blog</h3>
+            <a href="zero-trust-is-not-a-product" class="post-link">Zero Trust is not a product <span class="arrow">→</span></a>
+            <a href="why-i-left-after-8-years" class="post-link">Why I left after 8 years <span class="arrow">→</span></a>
+        </div>
+    </div>
+
+    <footer>
+        <p><a href="../">Sebastian Stein</a> · Sales Engineering Leader · Stuttgart</p>
+    </footer>
+
+    <script src="audio-player.js"></script>
+    <script>
+        // Article-specific: chapters for this post (auto-generated timestamps)
+        const chapters = [
+            { t: "Introduction", s: 0, id: null },
+            { t: "The three numbers you need", s: 34, id: "the-three-numbers-you-need" },
+            { t: "Calculating your percentage", s: 64, id: "calculating-your-percentage" },
+            { t: "What your equity might be worth", s: 84, id: "what-your-equity-might-be-worth" },
+            { t: "Stock options vs. RSUs", s: 142, id: "stock-options-vs-rsus" },
+            { t: "The vesting schedule", s: 202, id: "the-vesting-schedule" },
+            { t: "The exercise window problem", s: 254, id: "the-exercise-window-problem" },
+            { t: "Liquidation preferences", s: 295, id: "liquidation-preferences-why-your-math-might-be-wrong" },
+            { t: "Equity vs. salary trade-off", s: 356, id: "the-equity-vs-salary-trade-off" },
+            { t: "Red flags in equity offers", s: 425, id: "red-flags-in-equity-offers" },
+            { t: "Questions to ask", s: 454, id: "questions-to-ask" },
+            { t: "Typical equity ranges", s: 490, id: "typical-equity-ranges" },
+            { t: "The bottom line", s: 545, id: "the-bottom-line" }
+        ];
+        
+        // Initialize audio player with this article's audio and chapters
+        initAudioPlayer('audio/understanding-your-equity-offer.mp3', chapters);
+    </script>
+</body>
+</html>

@@ -120,6 +120,9 @@
         [data-theme="light"] .hero::before {
             background: linear-gradient(to top, transparent, rgba(250, 250, 250, 0.2));
         }
+        @media (min-width: 1400px) {
+            .hero, .hero img { height: 700px; max-height: 700px; }
+        }
         @media (max-width: 640px) {
             .hero, .hero img { height: 350px; max-height: 350px; }
         }
@@ -471,6 +474,9 @@
         .sun-icon { display: block; } .moon-icon { display: none; }
         [data-theme="light"] .sun-icon { display: none; }
         [data-theme="light"] .moon-icon { display: block; }
+        @media (min-width: 1400px) {
+            .hero, .hero img { height: 700px; max-height: 700px; }
+        }
         @media (max-width: 640px) {
             h1 { font-size: 1.75rem; }
             .article-header { padding: 3rem 1.25rem 2rem; }

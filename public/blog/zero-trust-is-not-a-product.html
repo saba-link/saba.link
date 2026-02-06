@@ -4,483 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zero Trust is not a product - Sebastian Stein</title>
-    <meta name="description" content="There's a slide I've seen hundreds of times. It shows a before-and-after: castle-and-moat on the left, Zero Trust on the right. The implication is clear - buy this product, get Zero Trust. It's a good slide. It's also misleading.">
-    <!-- <meta name="robots" content="noindex"> -->
+    <meta name="description" content="After 8 years selling Zero Trust solutions, here's what I learned about what makes deployments succeed or fail. Hint: it's rarely the product.">
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="blog-common.css">
     <style>
-        :root {
-            --bg: #0a0a10;
-            --card-bg: rgba(20, 20, 30, 0.7);
-            --card-bg-hover: rgba(26, 26, 38, 0.8);
-            --text: #e4e4e7;
-            --text-muted: #71717a;
-            --accent: #6366f1;
-            --accent-soft: rgba(99, 102, 241, 0.08);
-            --accent-highlight: rgba(99, 102, 241, 0.2);
-            --border: rgba(255, 255, 255, 0.06);
-            --glow: rgba(99, 102, 241, 0.2);
-        }
-        [data-theme="light"] {
-            --bg: #fafafa;
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --card-bg-hover: rgba(255, 255, 255, 0.95);
-            --text: #1a1a2e;
-            --text-muted: #64748b;
-            --accent: #4f46e5;
-            --accent-soft: rgba(79, 70, 229, 0.06);
-            --accent-highlight: rgba(79, 70, 229, 0.15);
-            --border: rgba(0, 0, 0, 0.06);
-            --glow: rgba(79, 70, 229, 0.12);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        /* === 7. Progress Bar === */
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), #8b5cf6);
-            z-index: 100;
-            transition: width 0.1s linear;
-            border-radius: 0 2px 2px 0;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.7;
-            min-height: 100vh;
-            position: relative;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            height: 60vh;
-            background: radial-gradient(ellipse at 30% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 0%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        [data-theme="light"] body::before {
-            background: radial-gradient(ellipse at 30% 0%, rgba(79, 70, 229, 0.04) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 0%, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
-        }
-        body > * { position: relative; z-index: 1; }
-
-        /* === Hero Image === */
-        .hero {
-            width: 100%;
-            max-height: 520px;
-            overflow: hidden;
-            position: relative;
-        }
-        .hero img {
-            width: 100%;
-            height: 520px;
-            object-fit: cover;
-            object-position: center 30%;
-            display: block;
-        }
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 50%;
-            background: linear-gradient(to bottom, transparent, var(--bg));
-            pointer-events: none;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 25%;
-            background: linear-gradient(to top, transparent, rgba(10, 10, 16, 0.2));
-            pointer-events: none;
-            z-index: 1;
-        }
-        [data-theme="light"] .hero::after {
-            background: linear-gradient(to bottom, transparent, var(--bg));
-        }
-        [data-theme="light"] .hero::before {
-            background: linear-gradient(to top, transparent, rgba(250, 250, 250, 0.2));
-        }
-        @media (max-width: 640px) {
-            .hero, .hero img { height: 350px; max-height: 350px; }
-        }
-
-        .article-header {
-            padding: 2rem 1.5rem 3rem;
-            max-width: 720px;
-            margin: 0 auto;
-        }
-        .article-header.has-hero {
-            margin-top: -5rem;
-        }
-        .back-link {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            margin-bottom: 2.5rem;
-            transition: color 0.2s;
-            letter-spacing: 0.02em;
-        }
-        .back-link:hover { color: var(--accent); }
-        .tag {
-            display: inline-block;
-            padding: 0.3rem 0.85rem;
-            background: var(--accent-soft);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 999px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 1.25rem;
-        }
-        [data-theme="light"] .tag { border-color: rgba(79, 70, 229, 0.2); }
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-            letter-spacing: -0.03em;
-        }
-        .excerpt {
-            color: var(--text-muted);
-            font-size: 1.15rem;
-            line-height: 1.8;
-            font-weight: 300;
-        }
-        .article-meta {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-top: 1.5rem;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-        }
-        .article-meta .meta-date,
-        .article-meta .meta-read {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-        .article-meta svg {
-            width: 14px;
-            height: 14px;
-            fill: var(--text-muted);
-            opacity: 0.7;
-        }
-        .article-meta .meta-dot {
-            opacity: 0.4;
-            font-size: 0.5rem;
-        }
-        .divider {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-        .divider hr {
-            border: none;
-            height: 1px;
-            background: var(--border);
-        }
-        .content {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 3rem 1.5rem;
-        }
-
-        /* === 3. Section Dividers === */
-        .prose h2 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin: 3.5rem 0 1.25rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border);
-            letter-spacing: -0.02em;
-            color: var(--text);
-        }
-        .prose h2:first-of-type {
-            border-top: none;
-            padding-top: 0;
-            margin-top: 0;
-        }
-
-        .prose p {
-            margin-bottom: 1.25rem;
-            font-size: 1rem;
-            line-height: 1.8;
-        }
-
-        /* === 4. Drop Cap === */
-        .prose .drop-cap::first-letter {
-            float: left;
-            font-size: 3.6em;
-            line-height: 0.85;
-            font-weight: 700;
-            margin-right: 0.12em;
-            margin-top: 0.05em;
-            padding-right: 0.05em;
-            color: var(--accent);
-            font-family: Georgia, 'Times New Roman', serif;
-        }
-
-        .prose ul {
-            margin: 1rem 0 1.5rem 1.5rem;
-            line-height: 1.8;
-        }
-        .prose li {
-            margin-bottom: 0.4rem;
-        }
-        .prose ol {
-            margin: 1rem 0 1.5rem 1.5rem;
-            line-height: 1.8;
-        }
-        .prose ol li {
-            margin-bottom: 0.75rem;
-        }
-        .prose strong {
-            font-weight: 600;
-            color: var(--text);
-        }
-        .prose em {
-            font-style: italic;
-            color: var(--text-muted);
-        }
-
-        /* === 1. Pullquotes === */
-        .pullquote {
-            border-left: 3px solid var(--accent);
-            margin: 2.5rem 0;
-            padding: 1.25rem 0 1.25rem 1.75rem;
-            font-size: 1.2rem;
-            font-weight: 500;
-            line-height: 1.6;
-            color: var(--text);
-            letter-spacing: -0.01em;
-            position: relative;
-        }
-        .pullquote::before {
-            content: '\201C';
-            position: absolute;
-            left: 0.75rem;
-            top: -0.75rem;
-            font-size: 4rem;
-            color: var(--accent);
-            opacity: 0.2;
-            font-family: Georgia, serif;
-            line-height: 1;
-        }
-
-        /* === 5. Highlighted Phrases === */
-        .hl {
-            background: var(--accent-highlight);
-            padding: 0.15em 0.4em;
-            border-radius: 4px;
-            font-weight: 500;
-            border-bottom: 2px solid var(--accent);
-            text-decoration: none;
-        }
-
-        /* === 2. Callout Box === */
-        .callout-box {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--accent);
-            border-radius: 12px;
-            padding: 2rem 2rem 1.5rem;
-            margin: 2.5rem 0;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .callout-box .callout-title {
-            font-size: 1.15rem;
-            font-weight: 600;
-            margin-bottom: 1.25rem;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .callout-box .callout-title svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--accent);
-        }
-        .callout-box ol {
-            margin: 0 0 0 1.25rem;
-        }
-        .callout-box ol li {
-            margin-bottom: 0.85rem;
-            line-height: 1.7;
-        }
-        .callout-box ol li:last-child {
-            margin-bottom: 0;
-        }
-
-        /* === 6. Insight Diagram === */
+        /* Article-specific: Diagram styles */
         .diagram-container {
-            margin: 2.5rem 0;
-            padding: 2rem 2.5rem;
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 12px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            padding: 1.5rem;
+            margin: 2rem 0;
         }
-        .diagram-container .diagram-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+        .diagram-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
             color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-            text-align: center;
         }
         .diagram-layout {
             display: flex;
             align-items: center;
-            gap: 2.5rem;
-            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
         }
         .donut-chart {
             flex-shrink: 0;
         }
         .diagram-legend {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            flex: 1;
+            min-width: 200px;
         }
         .legend-item {
             display: flex;
             align-items: flex-start;
             gap: 0.75rem;
+            margin-bottom: 1rem;
         }
         .legend-pct {
-            font-size: 1.5rem;
             font-weight: 700;
-            line-height: 1;
-            min-width: 3.5rem;
+            font-size: 1.1rem;
+            min-width: 45px;
         }
         .legend-pct.pct-small { color: var(--accent); }
-        .legend-pct.pct-large { color: var(--text); }
+        .legend-pct.pct-large { color: var(--text-muted); }
         .legend-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            line-height: 1.4;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
         .legend-label strong {
-            color: var(--text);
             display: block;
-            margin-bottom: 0.15rem;
-        }
-        @media (max-width: 540px) {
-            .diagram-layout { flex-direction: column; gap: 1.5rem; }
-            .diagram-container { padding: 1.5rem; }
-        }
-
-        .read-time {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-        }
-        .other-posts {
-            margin-top: 3rem;
-        }
-        .other-posts h3 {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            font-weight: 500;
-        }
-        .post-link {
-            display: block;
-            padding: 1rem 1.25rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            text-decoration: none;
-            color: var(--text);
-            font-size: 0.95rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            transition: all 0.2s;
-        }
-        .post-link:hover {
-            background: var(--card-bg-hover);
-            border-color: var(--accent);
-            transform: translateX(4px);
-        }
-        .post-link .arrow {
-            color: var(--text-muted);
-            float: right;
-            transition: color 0.2s;
-        }
-        .post-link:hover .arrow { color: var(--accent); }
-        footer {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 3rem 1.5rem;
-            border-top: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-        footer a { color: var(--accent); text-decoration: none; }
-
-        .post, .status-card, .post-link {
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .theme-toggle {
-            position: fixed; top: 1.5rem; right: 1.5rem; z-index: 10;
-            width: 40px; height: 40px; border-radius: 50%;
-            border: 1px solid var(--border); background: var(--card-bg);
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
-        }
-        .theme-toggle:hover { border-color: var(--accent); box-shadow: 0 0 12px var(--glow); }
-        .theme-toggle svg { width: 18px; height: 18px; fill: var(--text); }
-        .sun-icon { display: block; } .moon-icon { display: none; }
-        [data-theme="light"] .sun-icon { display: none; }
-        [data-theme="light"] .moon-icon { display: block; }
-        @media (max-width: 640px) {
-            h1 { font-size: 1.75rem; }
-            .article-header { padding: 3rem 1.25rem 2rem; }
-            .status-card { padding: 2rem 1.5rem; }
-            .callout-box { padding: 1.5rem 1.25rem 1.25rem; }
-            .diagram-container { padding: 1.25rem; }
-            .pullquote { font-size: 1.05rem; }
+            margin-bottom: 0.25rem;
         }
     </style>
 </head>
 <body>
-    <!-- 7. Progress Bar -->
     <div class="progress-bar" id="progressBar"></div>
 
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
@@ -489,18 +70,18 @@
     </button>
 
     <div class="hero">
-        <img src="hero-zt.jpg" alt="Modern glass skyscrapers viewed from below" loading="eager">
+        <img src="hero-zt.jpg" alt="Zero Trust visualization" loading="eager">
     </div>
 
     <div class="article-header has-hero">
         <a href="./" class="back-link">← All posts</a>
         <span class="tag">Zero Trust</span>
         <h1>Zero Trust is not a product</h1>
-        <p class="excerpt">There's a slide I've seen hundreds of times. It shows a before-and-after: castle-and-moat on the left, Zero Trust on the right. Buy this product, get Zero Trust. It's a good slide. It's also misleading.</p>
+        <p class="excerpt">After 8 years selling Zero Trust solutions, here's what I learned about what makes deployments succeed or fail. Hint: it's rarely the product.</p>
         <div class="article-meta">
             <span class="meta-date">
                 <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
-                January 15, 2026
+                January 28, 2026
             </span>
             <span class="meta-dot">●</span>
             <span class="meta-read">
@@ -510,13 +91,36 @@
         </div>
     </div>
 
+    <!-- Audio Player -->
+    <div id="stickyPlayer" class="sticky-player">
+        <button class="sp-toggle" onclick="togglePlayer()" title="Minimize">−</button>
+        <div class="sp-content">
+            <div class="sp-header">
+                <span style="font-size:1.2rem">🎧</span>
+                <span style="font-size:0.8rem;color:var(--text-muted)">Listen</span>
+                <select id="speedCtrl" onchange="document.getElementById('blogAudio').playbackRate=parseFloat(this.value)" style="margin-left:auto;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:0.15rem 0.3rem;font-size:0.7rem">
+                    <option value="0.75">0.75x</option>
+                    <option value="1" selected>1x</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2x</option>
+                </select>
+            </div>
+            <audio id="blogAudio" controls style="width:100%;height:36px" preload="metadata"></audio>
+            <div class="sp-chapters" id="spChapters"></div>
+            <div class="sp-auto">
+                <input type="checkbox" id="autoScroll" checked>
+                <label for="autoScroll">Auto-scroll page</label>
+            </div>
+        </div>
+    </div>
+
     <div class="divider"><hr></div>
 
     <div class="content prose">
-        <!-- 4. Drop Cap on first paragraph -->
         <p class="drop-cap">I spent eight years selling Zero Trust solutions. I've seen large enterprise deals close with high expectations of transformation. Some delivered. Many didn't. The difference was rarely the product.</p>
 
-        <h2>The product fallacy</h2>
+        <h2 id="the-product-fallacy">The product fallacy</h2>
         <p>Zero Trust is an architecture philosophy. It's a set of principles: <span class="hl">verify explicitly, assume breach, least privilege access</span>. You can't buy principles. You can only buy tools that help you implement them, if you're ready to do the work.</p>
         <p>The problem starts when vendors (and I've been guilty of this) position their product as <em>the</em> Zero Trust solution. ZPA gets you Zero Trust for applications. ZTNA gets you Zero Trust for networks. But you can deploy these tools and still not have Zero Trust.</p>
         <p>I've seen organizations with full SASE stacks that still:</p>
@@ -527,51 +131,44 @@
             <li>Trust everything inside the corporate network by default</li>
         </ul>
 
-        <!-- 1. Pullquote -->
         <blockquote class="pullquote">They bought Zero Trust. They don't have Zero Trust.</blockquote>
 
-        <h2>What made the difference</h2>
+        <h2 id="what-made-the-difference">What made the difference</h2>
         <p>The organizations that succeeded didn't just buy a product. They went on a journey. And they didn't go alone.</p>
         <p>The best outcomes I've seen happened when customers partnered with vendor teams, Solution Architects, Field CxOs, Senior SEs, to build something together. Not because we had all the answers. We didn't. We had no real visibility into their internal politics, their legacy debt, their capacity constraints. But we could help with the <span class="hl">high-level design</span>. We could think through the operating model. We could share patterns from other deployments.</p>
         <p>Customers who engaged in that kind of strategic conversation, who built a transformation roadmap instead of just a deployment plan, were the ones who could carry the work forward internally.</p>
         <p>The customers who expected the product to do the transformation for them, struggled.</p>
 
-        <h2>Groups, not individuals</h2>
+        <h2 id="groups-not-individuals">Groups, not individuals</h2>
         <p>Something that surprised me was that successful Zero Trust deployments often didn't start with individual user access decisions.</p>
         <p>For most of our ZPA projects, we looked at groups, not individuals. What does this team need access to? What does this department require? You can't realistically define policies for thousands of individual users. You define them for roles, for functions, for business units.</p>
         <p>The granular, per-user policies? Those were reserved for <span class="hl">crown jewels</span>, the systems where you genuinely need to know exactly who touches what. For everything else, group-based policies were the only way to scale.</p>
         <p>This seems obvious in hindsight, but I've seen plenty of projects stall because someone insisted on defining individual access for everyone. That's not Zero Trust. That's a spreadsheet that will never be finished.</p>
 
-        <h2>Take the users off the network</h2>
+        <h2 id="take-the-users-off-the-network">Take the users off the network</h2>
         <p>This is the single most impactful thing you can do, and it can happen fast.</p>
         <p>A user who needs access to five cloud apps, two SaaS platforms and a legacy application does not need an IP address in your corporate network. They don't need a VPN tunnel. They don't need to be "inside."</p>
-
         <p>With a Zero Trust approach, an authenticated user connects to a broker that gives them access to a defined set of applications. <span class="hl">No network access. No lateral movement. No attack surface.</span></p>
         <p>I've seen this reduce external exposure within days. No more reverse proxies. No more VPN gateways. No more enterprise applications exposed to the internet. The user authenticates, gets access to their apps, and that's it. During a learning phase you can start broad and tighten over time. But even on day one, the user has no IP in your network.</p>
         <p>That's not a theoretical benefit. That's a concrete security improvement you can measure: count your externally exposed services before and after. The difference is dramatic.</p>
 
-        <h2>Quick wins are real, but they're not the destination</h2>
+        <h2 id="quick-wins-are-real">Quick wins are real, but they're not the destination</h2>
         <p>I want to be clear: Zero Trust products can deliver fast, meaningful security improvements.</p>
         <p>I've seen ZPA deployments that, within days, made it dramatically harder for a simple attacker, ransomware, opportunistic threats, to move laterally through an organization. Applications that were previously exposed to the entire network suddenly weren't. That's real value, and it can happen fast.</p>
         <p>But that's the starting point, not the finish line. The quick wins buy you time and credibility. The long-term transformation, identity hygiene, least privilege enforcement, continuous verification, that takes years.</p>
 
-        <h2>The honest conversation</h2>
+        <h2 id="the-honest-conversation">The honest conversation</h2>
 
-        <!-- 1. Pullquote -->
         <blockquote class="pullquote">The product became 20% of the discussion. The other 80% was everything the product can't solve.</blockquote>
 
-        <!-- 6. Insight Diagram: 20/80 Split -->
         <div class="diagram-container">
             <div class="diagram-title">What a real Zero Trust conversation looks like</div>
             <div class="diagram-layout">
                 <div class="donut-chart">
                     <svg viewBox="0 0 160 160" width="160" height="160">
-                        <!-- 80% arc (people, process, strategy) -->
                         <circle cx="80" cy="80" r="60" fill="none" stroke="var(--text)" stroke-width="18" stroke-dasharray="301.6 376.99" stroke-dashoffset="-94.25" stroke-linecap="round" opacity="0.15"/>
                         <circle cx="80" cy="80" r="60" fill="none" stroke="var(--text)" stroke-width="18" stroke-dasharray="301.6 376.99" stroke-dashoffset="-94.25" stroke-linecap="round" opacity="0.6"/>
-                        <!-- 20% arc (product) -->
                         <circle cx="80" cy="80" r="60" fill="none" stroke="var(--accent)" stroke-width="18" stroke-dasharray="75.4 376.99" stroke-dashoffset="-94.25" stroke-linecap="round"/>
-                        <!-- Center text -->
                         <text x="80" y="74" text-anchor="middle" fill="var(--text)" font-size="22" font-weight="700" font-family="Inter, sans-serif">20</text>
                         <text x="80" y="93" text-anchor="middle" fill="var(--text-muted)" font-size="10" font-family="Inter, sans-serif">% product</text>
                     </svg>
@@ -599,37 +196,35 @@
         </ul>
         <p>The customers who asked these questions early succeeded. The ones who wanted the product to answer these questions for them didn't.</p>
 
-        <h2>Post-sales matters more than the sales org thinks</h2>
+        <h2 id="post-sales-matters">Post-sales matters more than the sales org thinks</h2>
         <p>One factor that consistently predicted success: <span class="hl">strong post-sales engagement, starting during the sales process</span>.</p>
         <p>When implementation teams, whether from the vendor or a partner, were involved before the deal closed, projects had a head start. The customer felt supported, not sold to. Trust was already there. The transition from "buying" to "building" was seamless.</p>
         <p>When post-sales was an afterthought, brought in only after signatures, projects struggled to find their footing. The relationship had to be rebuilt from scratch.</p>
         <p>If you're evaluating vendors, ask about this. Who will help you implement? When do they get involved? How much continuity is there between the sales team and the delivery team?</p>
 
-        <h2>What I'd tell someone evaluating Zero Trust</h2>
+        <h2 id="what-id-tell-someone-evaluating">What I'd tell someone evaluating Zero Trust</h2>
 
-        <!-- 2. Callout Box -->
         <div class="callout-box">
             <div class="callout-title">
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
                 Seven things to get right
             </div>
             <ol>
-                <li><strong>Take users off the network.</strong> If a user needs access to applications, give them access to applications. Not to your network. This alone eliminates a huge attack surface and can happen in days.</li>
-                <li><strong>Start with identity.</strong> If your identity infrastructure is a mess, no Zero Trust product will save you. Clean up Active Directory. Implement MFA everywhere. Know who your users are.</li>
-                <li><strong>Map your access.</strong> Before you can enforce least privilege, you need to know what access exists. This is tedious. There's no shortcut.</li>
-                <li><strong>Think in groups.</strong> Don't try to define access for every individual. Think about roles, teams, functions. Save the granular work for your most critical systems.</li>
-                <li><strong>Take the quick wins.</strong> Fast improvements to your security posture build credibility and buy time for the harder work.</li>
-                <li><strong>Budget for the non-product parts.</strong> Implementation services, training, process redesign, ongoing operations. The license is the beginning, not the end.</li>
+                <li><strong>Take users off the network.</strong> If a user needs access to applications, give them access to applications. Not to your network.</li>
+                <li><strong>Start with identity.</strong> If your identity infrastructure is a mess, no Zero Trust product will save you.</li>
+                <li><strong>Map your access.</strong> Before you can enforce least privilege, you need to know what access exists.</li>
+                <li><strong>Think in groups.</strong> Don't try to define access for every individual. Think about roles, teams, functions.</li>
+                <li><strong>Take the quick wins.</strong> Fast improvements build credibility and buy time for the harder work.</li>
+                <li><strong>Budget for the non-product parts.</strong> Implementation services, training, process redesign, ongoing operations.</li>
                 <li><strong>Get post-sales involved early.</strong> The people who will help you implement should be part of the conversation before you sign.</li>
             </ol>
         </div>
 
-        <h2>The reality</h2>
+        <h2 id="the-reality">The reality</h2>
         <p>Zero Trust, done right, is hard. It requires changing how people work. It surfaces problems that were easier to ignore.</p>
         <p>A product can make this easier. A product cannot make this unnecessary.</p>
         <p>The best deployments I've seen weren't the biggest deals. They were the ones where the customer was ready to do the work. Where the product was a tool, not a magic wand. Where there was a genuine partnership between customer and vendor.</p>
 
-        <!-- 1. Pullquote (closing) -->
         <blockquote class="pullquote">Zero Trust is not a product. It's a commitment.</blockquote>
 
         <div class="other-posts">
@@ -645,25 +240,24 @@
         <p><a href="../">Sebastian Stein</a> · Sales Engineering Leader · Stuttgart</p>
     </footer>
 
+    <script src="audio-player.js"></script>
     <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
-        }
-        const saved = localStorage.getItem('theme');
-        if (saved) document.documentElement.setAttribute('data-theme', saved);
-        else if (window.matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.setAttribute('data-theme', 'light');
-
-        // 7. Progress Bar
-        window.addEventListener('scroll', function() {
-            const bar = document.getElementById('progressBar');
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-            bar.style.width = progress + '%';
-        });
+        // Article-specific: chapters for this post (auto-generated timestamps)
+        const chapters = [
+            { t: "Introduction", s: 0, id: null },
+            { t: "The product fallacy", s: 14, id: "the-product-fallacy" },
+            { t: "What made the difference", s: 70, id: "what-made-the-difference" },
+            { t: "Groups, not individuals", s: 121, id: "groups-not-individuals" },
+            { t: "Take the users off the network", s: 174, id: "take-the-users-off-the-network" },
+            { t: "Quick wins are real", s: 241, id: "quick-wins-are-real" },
+            { t: "The honest conversation", s: 282, id: "the-honest-conversation" },
+            { t: "Post-sales matters", s: 338, id: "post-sales-matters" },
+            { t: "What I'd tell someone evaluating", s: 383, id: "what-id-tell-someone-evaluating" },
+            { t: "The reality", s: 436, id: "the-reality" }
+        ];
+        
+        // Initialize audio player with this article's audio and chapters
+        initAudioPlayer('audio/zero-trust-is-not-a-product.mp3', chapters);
     </script>
 </body>
 </html>

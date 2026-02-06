@@ -9,477 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0a0a10;
-            --card-bg: rgba(20, 20, 30, 0.7);
-            --card-bg-hover: rgba(26, 26, 38, 0.8);
-            --text: #e4e4e7;
-            --text-muted: #71717a;
-            --accent: #6366f1;
-            --accent-soft: rgba(99, 102, 241, 0.08);
-            --accent-highlight: rgba(99, 102, 241, 0.2);
-            --border: rgba(255, 255, 255, 0.06);
-            --glow: rgba(99, 102, 241, 0.2);
-        }
-        [data-theme="light"] {
-            --bg: #fafafa;
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --card-bg-hover: rgba(255, 255, 255, 0.95);
-            --text: #1a1a2e;
-            --text-muted: #64748b;
-            --accent: #4f46e5;
-            --accent-soft: rgba(79, 70, 229, 0.06);
-            --accent-highlight: rgba(79, 70, 229, 0.15);
-            --border: rgba(0, 0, 0, 0.06);
-            --glow: rgba(79, 70, 229, 0.12);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), #8b5cf6);
-            z-index: 100;
-            transition: width 0.1s linear;
-            border-radius: 0 2px 2px 0;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.7;
-            min-height: 100vh;
-            position: relative;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            height: 60vh;
-            background: radial-gradient(ellipse at 30% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 0%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        [data-theme="light"] body::before {
-            background: radial-gradient(ellipse at 30% 0%, rgba(79, 70, 229, 0.04) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 0%, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
-        }
-        body > * { position: relative; z-index: 1; }
-
-        .hero {
-            width: 100%;
-            max-height: 520px;
-            overflow: hidden;
-            position: relative;
-        }
-        .hero img {
-            width: 100%;
-            height: 520px;
-            object-fit: cover;
-            object-position: center;
-            display: block;
-        }
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 50%;
-            background: linear-gradient(to bottom, transparent, var(--bg));
-            pointer-events: none;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 25%;
-            background: linear-gradient(to top, transparent, rgba(10, 10, 16, 0.2));
-            pointer-events: none;
-            z-index: 1;
-        }
-        [data-theme="light"] .hero::after {
-            background: linear-gradient(to bottom, transparent, var(--bg));
-        }
-        [data-theme="light"] .hero::before {
-            background: linear-gradient(to top, transparent, rgba(250, 250, 250, 0.2));
-        }
-        @media (max-width: 640px) {
-            .hero, .hero img { height: 350px; max-height: 350px; }
-        }
-
-        .article-header {
-            padding: 2rem 1.5rem 3rem;
-            max-width: 720px;
-            margin: 0 auto;
-        }
-        .article-header.has-hero {
-            margin-top: -5rem;
-        }
-        .back-link {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            margin-bottom: 2.5rem;
-            transition: color 0.2s;
-            letter-spacing: 0.02em;
-        }
-        .back-link:hover { color: var(--accent); }
-        .tag {
-            display: inline-block;
-            padding: 0.3rem 0.85rem;
-            background: var(--accent-soft);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 999px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 1.25rem;
-        }
-        [data-theme="light"] .tag { border-color: rgba(79, 70, 229, 0.2); }
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-            letter-spacing: -0.03em;
-        }
-        .excerpt {
-            color: var(--text-muted);
-            font-size: 1.15rem;
-            line-height: 1.8;
-            font-weight: 300;
-        }
-        .article-meta {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-top: 1.5rem;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-        }
-        .article-meta .meta-date,
-        .article-meta .meta-read {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-        .article-meta svg {
-            width: 14px;
-            height: 14px;
-            fill: var(--text-muted);
-            opacity: 0.7;
-        }
-        .article-meta .meta-dot {
-            opacity: 0.4;
-            font-size: 0.5rem;
-        }
-        .divider {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-        .divider hr {
-            border: none;
-            height: 1px;
-            background: var(--border);
-        }
-        .content {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 3rem 1.5rem;
-        }
-
-        .prose h2 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin: 3.5rem 0 1.25rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border);
-            letter-spacing: -0.02em;
-            color: var(--text);
-        }
-        .prose h2:first-of-type {
-            border-top: none;
-            padding-top: 0;
-            margin-top: 0;
-        }
-        .prose h3 {
-            font-size: 1.15rem;
-            font-weight: 600;
-            margin: 2rem 0 0.75rem;
-            letter-spacing: -0.01em;
-            color: var(--text);
-        }
-
-        .prose p {
-            margin-bottom: 1.25rem;
-            font-size: 1rem;
-            line-height: 1.8;
-        }
-
-        .prose .drop-cap::first-letter {
-            float: left;
-            font-size: 3.6em;
-            line-height: 0.85;
-            font-weight: 700;
-            margin-right: 0.12em;
-            margin-top: 0.05em;
-            padding-right: 0.05em;
-            color: var(--accent);
-            font-family: Georgia, 'Times New Roman', serif;
-        }
-
-        .prose ul, .prose ol {
-            margin: 1rem 0 1.5rem 1.5rem;
-            line-height: 1.8;
-        }
-        .prose li {
-            margin-bottom: 0.5rem;
-        }
-        .prose strong {
-            font-weight: 600;
-            color: var(--text);
-        }
-        .prose em {
-            font-style: italic;
-            color: var(--text-muted);
-        }
-
-        .pullquote {
-            border-left: 3px solid var(--accent);
-            margin: 2.5rem 0;
-            padding: 1.25rem 0 1.25rem 1.75rem;
-            font-size: 1.2rem;
-            font-weight: 500;
-            line-height: 1.6;
-            color: var(--text);
-            letter-spacing: -0.01em;
-            position: relative;
-        }
-        .pullquote::before {
-            content: '\201C';
-            position: absolute;
-            left: 0.75rem;
-            top: -0.75rem;
-            font-size: 4rem;
-            color: var(--accent);
-            opacity: 0.2;
-            font-family: Georgia, serif;
-            line-height: 1;
-        }
-
-        .hl {
-            background: var(--accent-highlight);
-            padding: 0.15em 0.4em;
-            border-radius: 4px;
-            font-weight: 500;
-            border-bottom: 2px solid var(--accent);
-            text-decoration: none;
-        }
-
-        .callout-box {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--accent);
-            border-radius: 12px;
-            padding: 2rem 2rem 1.5rem;
-            margin: 2.5rem 0;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .callout-box .callout-title {
-            font-size: 1.15rem;
-            font-weight: 600;
-            margin-bottom: 1.25rem;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .callout-box .callout-title svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--accent);
-        }
-        .callout-box ul, .callout-box ol {
-            margin: 0 0 0 1.25rem;
-        }
-        .callout-box li {
-            margin-bottom: 0.75rem;
-            line-height: 1.7;
-        }
-        .callout-box li:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Data Table */
-        .data-table {
-            width: 100%;
-            margin: 1.5rem 0 2rem;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-        .data-table th, .data-table td {
-            padding: 0.75rem 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-        .data-table th {
-            font-weight: 600;
-            color: var(--text);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .data-table td {
-            color: var(--text-muted);
-        }
-        .data-table tr:hover td {
-            color: var(--text);
-        }
-        .data-table .highlight-row td {
-            color: var(--text);
-            background: var(--accent-soft);
-        }
-
-        .read-time {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-        }
-
-        .series-nav {
-            margin-top: 2.5rem;
-            padding: 1.5rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-        }
-        .series-nav .series-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            font-weight: 500;
-        }
-        .series-nav .series-links {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .series-nav a {
-            color: var(--text);
-            text-decoration: none;
-            font-size: 0.9rem;
-            padding: 0.5rem 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: color 0.2s;
-        }
-        .series-nav a:hover { color: var(--accent); }
-        .series-nav a.current {
-            color: var(--accent);
-            font-weight: 500;
-        }
-        .series-nav a.upcoming {
-            color: var(--text-muted);
-            opacity: 0.6;
-        }
-
-        .other-posts {
-            margin-top: 3rem;
-        }
-        .other-posts h3 {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            font-weight: 500;
-        }
-        .post-link {
-            display: block;
-            padding: 1rem 1.25rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            text-decoration: none;
-            color: var(--text);
-            font-size: 0.95rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            transition: all 0.2s;
-        }
-        .post-link:hover {
-            background: var(--card-bg-hover);
-            border-color: var(--accent);
-            transform: translateX(4px);
-        }
-        .post-link .arrow {
-            color: var(--text-muted);
-            float: right;
-            transition: color 0.2s;
-        }
-        .post-link:hover .arrow { color: var(--accent); }
-        footer {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 3rem 1.5rem;
-            border-top: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-        footer a { color: var(--accent); text-decoration: none; }
-
-        .post, .status-card, .post-link {
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .theme-toggle {
-            position: fixed; top: 1.5rem; right: 1.5rem; z-index: 10;
-            width: 40px; height: 40px; border-radius: 50%;
-            border: 1px solid var(--border); background: var(--card-bg);
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
-        }
-        .theme-toggle:hover { border-color: var(--accent); box-shadow: 0 0 12px var(--glow); }
-        .theme-toggle svg { width: 18px; height: 18px; fill: var(--text); }
-        .sun-icon { display: block; } .moon-icon { display: none; }
-        [data-theme="light"] .sun-icon { display: none; }
-        [data-theme="light"] .moon-icon { display: block; }
-        @media (max-width: 640px) {
-            h1 { font-size: 1.75rem; }
-            .article-header { padding: 3rem 1.25rem 2rem; }
-            .callout-box { padding: 1.5rem 1.25rem 1.25rem; }
-            .pullquote { font-size: 1.05rem; }
-            .data-table { font-size: 0.8rem; }
-            .data-table th, .data-table td { padding: 0.5rem 0.75rem; }
-        }
-    </style>
+    <link rel="stylesheet" href="blog-common.css">
 </head>
 <body>
     <div class="progress-bar" id="progressBar"></div>
@@ -490,7 +20,7 @@
     </button>
 
     <div class="hero">
-        <img src="hero-neon.jpg" alt="DO SOMETHING GREAT neon sign" loading="eager">
+        <img src="hero-build.jpg" alt="BUILD SOMETHING GREAT neon sign" loading="eager">
     </div>
 
     <div class="article-header has-hero">
@@ -501,13 +31,37 @@
         <div class="article-meta">
             <span class="meta-date">
                 <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
-                February 5, 2026
+                February 2, 2026
             </span>
             <span class="meta-dot">●</span>
             <span class="meta-read">
                 <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
                 12 min read
             </span>
+        </div>
+    </div>
+
+    <!-- Audio Player -->
+    <div id="stickyPlayer" class="sticky-player">
+        <button class="sp-toggle" onclick="togglePlayer()" title="Minimize">−</button>
+        <div class="sp-content">
+            <div class="sp-header">
+                <span style="font-size:1.2rem">🎧</span>
+                <span style="font-size:0.8rem;color:var(--text-muted)">Listen</span>
+                <select id="speedCtrl" onchange="document.getElementById('blogAudio').playbackRate=parseFloat(this.value)" style="margin-left:auto;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:0.15rem 0.3rem;font-size:0.7rem">
+                    <option value="0.75">0.75x</option>
+                    <option value="1" selected>1x</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2x</option>
+                </select>
+            </div>
+            <audio id="blogAudio" controls style="width:100%;height:36px" preload="metadata"></audio>
+            <div class="sp-chapters" id="spChapters"></div>
+            <div class="sp-auto">
+                <input type="checkbox" id="autoScroll" checked>
+                <label for="autoScroll">Auto-scroll page</label>
+            </div>
         </div>
     </div>
 
@@ -522,7 +76,7 @@
 
         <p>So I did what engineers do: I learned the domain. This post is what I wish someone had explained to me when I started.</p>
 
-        <h2>Funding is fuel, not success</h2>
+        <h2 id="funding-is-fuel-not-success">Funding is fuel, not success</h2>
 
         <p>Let's start with the most important mental model: <strong>raising money is not an achievement</strong>. It's fuel. A startup that raises a lot of money isn't automatically healthy. It might just need a lot of capital to operate, or it's burning through cash faster than expected.</p>
 
@@ -530,7 +84,7 @@
 
         <p>When you see a headline like "Startup X raises €50M Series C," the right question isn't "wow, they must be doing great." It's: why do they need that money, and what will they do with it?</p>
 
-        <h2>Who invests at each stage</h2>
+        <h2 id="who-invests-at-each-stage">Who invests at each stage</h2>
 
         <p>Different investors play at different stages. Understanding this helps you decode a company's trajectory.</p>
 
@@ -548,9 +102,14 @@
             <li><strong>Corporate VC</strong> — strategic investors like Google Ventures, Salesforce Ventures</li>
         </ul>
 
+        <h3>The bootstrapped outliers</h3>
+        <p>Not every unicorn follows the VC playbook. Zscaler, for example, bootstrapped for years before taking outside capital in 2012 — a full decade after founding. They went public in 2018 at a $1.9B valuation and are now worth over $25B.</p>
+
+        <p>For candidates, these companies often have different DNA: more focus on capital efficiency, less "growth at all costs" pressure, and founders who've retained significant control. The culture tends to be more pragmatic. Whether that's a pro or con depends on what you're looking for.</p>
+
         <p>As a candidate, pay attention to who invested. <span class="hl">Tier-1 VCs</span> (Sequoia, a16z/Andreessen Horowitz, Benchmark, Index) signal that serious due diligence was done. Unknown investors or only strategic investors can be yellow flags.</p>
 
-        <h2>The funding rounds, explained</h2>
+        <h2 id="the-funding-rounds-explained">The funding rounds, explained</h2>
 
         <p>Here's what actually happens at each stage:</p>
 
@@ -615,7 +174,7 @@
 
         <p><strong>Series C+:</strong> Lower risk, lower equity upside. Starting to feel like a real company. Good benefits, clear processes. The IPO conversation starts.</p>
 
-        <h2>Understanding valuations</h2>
+        <h2 id="understanding-valuations">Understanding valuations</h2>
 
         <p>Here's a concept that confused me: <strong>pre-money vs. post-money valuation</strong>.</p>
 
@@ -630,7 +189,7 @@
 
         <p>Why does this matter to you? Because your equity percentage is calculated against total shares. If the company keeps raising at higher valuations, you dilute less. If there's a down round, you dilute more, and your options might be underwater.</p>
 
-        <h2>Warning signs to watch for</h2>
+        <h2 id="warning-signs-to-watch-for">Warning signs to watch for</h2>
 
         <p>When evaluating a startup, these patterns should make you ask harder questions:</p>
 
@@ -642,7 +201,7 @@
             <li><strong>"Stealth mode" at Series B+</strong> — why is a company with €10M+ ARR hiding? What are they not telling you?</li>
         </ul>
 
-        <h2>What you should ask</h2>
+        <h2 id="what-you-should-ask">What you should ask</h2>
 
         <div class="callout-box">
             <div class="callout-title">
@@ -659,7 +218,7 @@
             </ol>
         </div>
 
-        <h2>The bottom line</h2>
+        <h2 id="the-bottom-line">The bottom line</h2>
 
         <p>Startup funding isn't magic. It's a system with knowable rules. Once you understand how it works, you can make better decisions about where to work.</p>
 
@@ -671,7 +230,7 @@
             <div class="series-title">Startup Finance Series</div>
             <div class="series-links">
                 <a href="startup-funding-explained" class="current">→ Part 1: What I wish I'd known about startup funding</a>
-                <a href="#" class="upcoming">○ Part 2: Understanding your equity offer (coming soon)</a>
+                <a href="understanding-your-equity-offer">→ Part 2: Understanding your equity offer</a>
                 <a href="#" class="upcoming">○ Part 3: Due diligence as a candidate (coming soon)</a>
             </div>
         </div>
@@ -687,24 +246,22 @@
         <p><a href="../">Sebastian Stein</a> · Sales Engineering Leader · Stuttgart</p>
     </footer>
 
+    <script src="audio-player.js"></script>
     <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
-        }
-        const saved = localStorage.getItem('theme');
-        if (saved) document.documentElement.setAttribute('data-theme', saved);
-        else if (window.matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.setAttribute('data-theme', 'light');
-
-        window.addEventListener('scroll', function() {
-            const bar = document.getElementById('progressBar');
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-            bar.style.width = progress + '%';
-        });
+        // Article-specific: chapters for this post (auto-generated timestamps)
+        const chapters = [
+            { t: "Introduction", s: 0, id: null },
+            { t: "Funding is fuel, not success", s: 47, id: "funding-is-fuel-not-success" },
+            { t: "Who invests at each stage", s: 85, id: "who-invests-at-each-stage" },
+            { t: "The funding rounds, explained", s: 184, id: "the-funding-rounds-explained" },
+            { t: "Understanding valuations", s: 299, id: "understanding-valuations" },
+            { t: "Warning signs to watch for", s: 354, id: "warning-signs-to-watch-for" },
+            { t: "What you should ask", s: 397, id: "what-you-should-ask" },
+            { t: "The bottom line", s: 428, id: "the-bottom-line" }
+        ];
+        
+        // Initialize audio player with this article's audio and chapters
+        initAudioPlayer('audio/startup-funding-explained.mp3', chapters);
     </script>
 </body>
 </html>
