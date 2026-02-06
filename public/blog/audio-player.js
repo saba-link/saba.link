@@ -131,20 +131,60 @@ function initAudioPlayer(audioSrc, chapters) {
                         return;
                     }
                     
-                    audio.currentTime = targetTime;
+                    // Try pause-seek-play pattern
+                    const wasPlaying = !audio.paused;
+                    if (wasPlaying) {
+                        console.log('[AudioPlayer] Pausing before seek...');
+                        audio.pause();
+                    }
                     
-                    // Verify after a short delay
+                    // Wait a tick, then seek
                     setTimeout(() => {
-                        const diff = Math.abs(audio.currentTime - targetTime);
-                        console.log('[AudioPlayer] Seek result | target:', targetTime, '| actual:', audio.currentTime.toFixed(1), '| diff:', diff.toFixed(1));
+                        console.log('[AudioPlayer] Setting currentTime to', targetTime);
+                        audio.currentTime = targetTime;
                         
-                        if (diff <= 2) {
-                            console.log('[AudioPlayer] Seek succeeded!');
-                        } else {
-                            console.log('[AudioPlayer] Seek failed despite buffer. Safari bug.');
-                        }
-                        updateUI();
-                    }, 150);
+                        // Wait for seeked event
+                        const onSeeked = () => {
+                            const diff = Math.abs(audio.currentTime - targetTime);
+                            console.log('[AudioPlayer] Seeked event | actual:', audio.currentTime.toFixed(1), '| diff:', diff.toFixed(1));
+                            
+                            if (diff <= 2) {
+                                console.log('[AudioPlayer] Seek succeeded!');
+                            } else {
+                                console.log('[AudioPlayer] Seek failed. Trying load() workaround...');
+                                // Nuclear option: reload and seek
+                                const src = audio.src;
+                                audio.src = '';
+                                audio.src = src;
+                                audio.currentTime = targetTime;
+                            }
+                            
+                            if (wasPlaying) {
+                                audio.play().catch(e => {});
+                            }
+                            updateUI();
+                            audio.removeEventListener('seeked', onSeeked);
+                        };
+                        audio.addEventListener('seeked', onSeeked);
+                        
+                        // Fallback if seeked doesn't fire
+                        setTimeout(() => {
+                            audio.removeEventListener('seeked', onSeeked);
+                            const diff = Math.abs(audio.currentTime - targetTime);
+                            if (diff > 2) {
+                                console.log('[AudioPlayer] Seeked timeout, trying src reload...');
+                                const src = audio.src;
+                                const wasPlaying2 = !audio.paused;
+                                audio.src = '';
+                                audio.src = src;
+                                audio.addEventListener('loadedmetadata', () => {
+                                    audio.currentTime = targetTime;
+                                    if (wasPlaying2) audio.play().catch(e => {});
+                                    updateUI();
+                                }, { once: true });
+                            }
+                        }, 500);
+                    }, 50);
                 };
                 
                 // Must wait for audio to actually be playing before seek works
