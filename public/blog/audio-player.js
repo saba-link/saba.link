@@ -68,12 +68,55 @@ function initAudioPlayer(audioSrc, chapters) {
             const idx = i;
             console.log('[AudioPlayer] Chapter clicked:', c.t, '| target time:', c.s, '| readyState:', audio.readyState, '| currentTime:', audio.currentTime);
             
-            // Helper to seek and update UI
-            const seekTo = () => {
+            // readyState: 0=HAVE_NOTHING, 1=HAVE_METADATA, 2=HAVE_CURRENT_DATA, 3=HAVE_FUTURE_DATA, 4=HAVE_ENOUGH_DATA
+            // Problem: Browser can only seek to buffered positions. If not buffered, seek fails silently.
+            
+            const attemptSeek = () => {
                 const beforeSeek = audio.currentTime;
                 audio.currentTime = c.s;
-                console.log('[AudioPlayer] seekTo called | before:', beforeSeek, '| target:', c.s, '| after:', audio.currentTime, '| readyState:', audio.readyState);
                 
+                // Check if seek actually worked (give it a small tolerance)
+                setTimeout(() => {
+                    const afterSeek = audio.currentTime;
+                    console.log('[AudioPlayer] Seek result | target:', c.s, '| actual:', afterSeek, '| diff:', Math.abs(afterSeek - c.s));
+                    
+                    if (Math.abs(afterSeek - c.s) > 2) {
+                        // Seek failed - position not buffered yet
+                        console.log('[AudioPlayer] Seek failed, waiting for buffer...');
+                        
+                        // Wait for progress event (more data buffered) and retry
+                        const onProgress = () => {
+                            console.log('[AudioPlayer] More data buffered, retrying seek...');
+                            audio.currentTime = c.s;
+                            
+                            setTimeout(() => {
+                                if (Math.abs(audio.currentTime - c.s) <= 2) {
+                                    console.log('[AudioPlayer] Seek succeeded after buffer');
+                                    audio.removeEventListener('progress', onProgress);
+                                    updateUI();
+                                }
+                            }, 100);
+                        };
+                        audio.addEventListener('progress', onProgress);
+                        
+                        // Also try on timeupdate as fallback
+                        const onTimeUpdate = () => {
+                            if (Math.abs(audio.currentTime - c.s) <= 2) {
+                                console.log('[AudioPlayer] Seek succeeded via timeupdate');
+                                audio.removeEventListener('timeupdate', onTimeUpdate);
+                                audio.removeEventListener('progress', onProgress);
+                                updateUI();
+                            }
+                        };
+                        audio.addEventListener('timeupdate', onTimeUpdate);
+                    } else {
+                        console.log('[AudioPlayer] Seek succeeded immediately');
+                        updateUI();
+                    }
+                }, 50);
+            };
+            
+            const updateUI = () => {
                 highlightSection(c.id);
                 chapEl.querySelectorAll('.sp-ch').forEach((el, j) => el.classList.toggle('active', j === idx));
                 if (c.id) {
@@ -82,25 +125,13 @@ function initAudioPlayer(audioSrc, chapters) {
                 audioPlayerState.lastCh = idx;
             };
             
-            // readyState: 0=HAVE_NOTHING, 1=HAVE_METADATA, 2=HAVE_CURRENT_DATA, 3=HAVE_FUTURE_DATA, 4=HAVE_ENOUGH_DATA
-            if (audio.readyState < 1) {
-                // No metadata yet - need to wait for loadedmetadata
-                console.log('[AudioPlayer] No metadata yet, waiting for loadedmetadata...');
+            // Start playing first (this triggers buffering)
+            if (audio.paused) {
                 audio.play().catch(e => console.log('[AudioPlayer] play() rejected:', e));
-                const onLoaded = () => {
-                    console.log('[AudioPlayer] loadedmetadata fired, now seeking...');
-                    seekTo();
-                    audio.removeEventListener('loadedmetadata', onLoaded);
-                };
-                audio.addEventListener('loadedmetadata', onLoaded);
-            } else {
-                // We have metadata, can seek directly
-                console.log('[AudioPlayer] Have metadata, seeking directly...');
-                seekTo();
-                if (audio.paused) {
-                    audio.play().catch(e => console.log('[AudioPlayer] play() rejected:', e));
-                }
             }
+            
+            // Then attempt seek
+            attemptSeek();
         };
         chapEl.appendChild(d);
     });
