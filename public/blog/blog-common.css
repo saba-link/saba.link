@@ -130,18 +130,25 @@ body > * { position: relative; z-index: 1; }
 .article-header.has-hero {
     margin-top: -5rem;
 }
-.back-link {
+.header-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.back-link, .about-link {
     color: var(--text-muted);
     text-decoration: none;
     font-size: 0.85rem;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    margin-bottom: 2.5rem;
     transition: color 0.2s;
     letter-spacing: 0.02em;
 }
-.back-link:hover { color: var(--accent); }
+.back-link:hover, .about-link:hover { color: var(--accent); }
 
 .tag {
     display: inline-block;
