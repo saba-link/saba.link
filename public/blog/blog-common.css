@@ -390,6 +390,21 @@ h1 {
     background: rgba(16, 185, 129, 0.08);
 }
 
+/* Code block language label */
+.code-lang-label {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.75rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    opacity: 0.55;
+    pointer-events: none;
+    font-family: inherit;
+}
+
 /* Tables */
 .prose table {
     width: fit-content;
@@ -436,10 +451,15 @@ h1 {
 .prose blockquote {
     border-left: 3px solid var(--accent);
     margin: 2rem 0;
-    padding: 0.75rem 0 0.75rem 1.5rem;
+    padding: 0.75rem 0.75rem 0.75rem 1.5rem;
     color: var(--text-muted);
     font-style: italic;
     line-height: 1.7;
+    background: rgba(99, 102, 241, 0.04);
+    border-radius: 0 6px 6px 0;
+}
+[data-theme="light"] .prose blockquote {
+    background: rgba(79, 70, 229, 0.04);
 }
 .prose blockquote p { margin-bottom: 0; }
 
@@ -480,6 +500,22 @@ h1 {
 }
 [data-theme="light"] .prose a { color: var(--accent); border-bottom-color: rgba(79, 70, 229, 0.3); }
 [data-theme="light"] .prose a:hover { color: #4338ca; border-bottom-color: rgba(67, 56, 202, 0.6); }
+
+/* Resource list links — URL line after <br> in a list item */
+.prose li br + a {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-bottom: none;
+    margin-top: 0.15rem;
+    word-break: break-all;
+    opacity: 0.7;
+}
+.prose li br + a:hover {
+    color: var(--accent);
+    opacity: 1;
+    border-bottom: none;
+}
 
 /* Prose horizontal rule */
 .prose hr {
@@ -553,6 +589,13 @@ h1 {
 .toc-list a:hover {
     color: var(--text);
     border: none;
+}
+.toc-list a.toc-active {
+    color: var(--accent);
+    font-weight: 600;
+}
+.toc-list li:has(a.toc-active)::before {
+    opacity: 1;
 }
 
 /* Section separator headings */
