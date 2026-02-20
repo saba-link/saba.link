@@ -265,7 +265,20 @@ h1 {
     line-height: 1.8;
 }
 .prose li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
+    line-height: 1.75;
+}
+/* Slightly more breathing room in nested lists */
+.prose li > ul,
+.prose li > ol {
+    margin-top: 0.4rem;
+    margin-bottom: 0.1rem;
+}
+/* First paragraph after a section heading — slightly more prominent */
+.prose h2 + p {
+    font-size: 1.02em;
+    color: var(--text);
+    opacity: 0.92;
 }
 .prose strong {
     font-weight: 600;
