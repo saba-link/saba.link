@@ -381,6 +381,91 @@ h1 {
     line-height: 1;
 }
 
+/* Prose links */
+.prose a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.35);
+    transition: border-color 0.2s, color 0.2s;
+}
+.prose a:hover {
+    color: #818cf8;
+    border-bottom-color: rgba(129, 140, 248, 0.7);
+}
+[data-theme="light"] .prose a { color: var(--accent); border-bottom-color: rgba(79, 70, 229, 0.3); }
+[data-theme="light"] .prose a:hover { color: #4338ca; border-bottom-color: rgba(67, 56, 202, 0.6); }
+
+/* Prose horizontal rule */
+.prose hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 3rem 0;
+}
+
+/* Table of Contents */
+.toc {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin: 0 0 3rem;
+}
+.toc-header {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+.toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: toc-counter;
+}
+.toc-list li {
+    counter-increment: toc-counter;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.3rem 0;
+    margin-bottom: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+[data-theme="light"] .toc-list li { border-bottom-color: rgba(0,0,0,0.04); }
+.toc-list li:last-child { border-bottom: none; }
+.toc-list li::before {
+    content: counter(toc-counter);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    opacity: 0.7;
+    min-width: 1.2rem;
+    text-align: right;
+    flex-shrink: 0;
+}
+.toc-list a {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    border: none;
+    transition: color 0.2s;
+    line-height: 1.5;
+}
+.toc-list a:hover {
+    color: var(--text);
+    border: none;
+}
+
+/* Section separator headings */
+.prose h2 {
+    scroll-margin-top: 2rem;
+}
+
 /* Inline Highlight */
 .hl {
     background: var(--accent-highlight);
