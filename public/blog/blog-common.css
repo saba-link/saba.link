@@ -519,8 +519,9 @@ footer a { color: var(--accent); text-decoration: none; }
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: all 0.2s;
 }
-.theme-toggle:hover { border-color: var(--accent); box-shadow: 0 0 12px var(--glow); }
-.theme-toggle svg { width: 18px; height: 18px; fill: var(--text); }
+.theme-toggle:hover { border-color: var(--accent); box-shadow: 0 0 12px var(--glow); transform: scale(1.1); }
+.theme-toggle svg { width: 18px; height: 18px; fill: var(--text); transition: transform 0.3s ease; }
+.theme-toggle:hover svg { transform: rotate(15deg); }
 .sun-icon { display: block; } .moon-icon { display: none; }
 [data-theme="light"] .sun-icon { display: none; }
 [data-theme="light"] .moon-icon { display: block; }
