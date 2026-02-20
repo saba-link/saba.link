@@ -433,7 +433,11 @@ h1 {
     border: none;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--border), transparent);
-    margin: 3rem 0;
+    margin: 3.5rem 0 0;
+}
+/* When HR directly precedes an H2, H2 handles its own spacing — no double gap */
+.prose hr + h2 {
+    margin-top: 2rem;
 }
 
 /* Table of Contents */
