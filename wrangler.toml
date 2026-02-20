@@ -1,6 +1,13 @@
 name = "small-tree-9310"
 compatibility_date = "2024-01-01"
 preview_urls = false
+main = "src/worker.js"
 
 [assets]
 directory = "./public"
+binding = "ASSETS"
+
+# Analytics Engine — page views for saba.link + blog
+[[analytics_engine_datasets]]
+binding = "ANALYTICS"
+dataset = "page_views"
