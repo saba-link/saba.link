@@ -381,7 +381,9 @@ h1 {
     vertical-align: top;
     line-height: 1.5;
 }
-.prose tbody tr:hover td { color: var(--text); }
+.prose tbody tr:nth-child(even) td { background: rgba(255,255,255,0.025); }
+[data-theme="light"] .prose tbody tr:nth-child(even) td { background: rgba(0,0,0,0.025); }
+.prose tbody tr:hover td { color: var(--text); background: var(--accent-soft); }
 .prose tbody tr:last-child td { border-bottom: none; }
 
 /* h4 in prose */
@@ -448,9 +450,11 @@ h1 {
     background: linear-gradient(90deg, transparent, var(--border), transparent);
     margin: 3.5rem 0 0;
 }
-/* When HR directly precedes an H2, H2 handles its own spacing — no double gap */
+/* HR before H2: H2 already has its own border-top — suppress duplicate divider + spacing */
 .prose hr + h2 {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
+    border-top: none;
+    padding-top: 0;
 }
 
 /* Table of Contents */
