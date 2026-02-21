@@ -69,6 +69,14 @@ function initAudioPlayer(audioSrc, chapters) {
     
     // Build chapter list
     chapEl.innerHTML = '';
+
+    // Hide chapters + auto-scroll when no chapters provided (e.g. share pages)
+    if (chapters.length === 0) {
+        chapEl.style.display = 'none';
+        const autoSect = autoEl && autoEl.closest('.sp-auto');
+        if (autoSect) autoSect.style.display = 'none';
+    }
+
     chapters.forEach((c, i) => {
         const d = document.createElement('div');
         d.className = 'sp-ch';
@@ -385,4 +393,66 @@ document.addEventListener('DOMContentLoaded', function() {
 // Also run immediately in case DOMContentLoaded already fired
 if (document.readyState !== 'loading') {
     initTheme();
+    initProgressBar();
+}
+
+/**
+ * Enable auto-collapse to mini bubble on scroll.
+ * Mirrors the rc-bar behavior on share pages: collapse when scrolling,
+ * expand automatically after `delay` ms of no scrolling.
+ * Tap the mini bubble at any time to expand immediately.
+ * @param {number} [delay=8000] - ms of scroll-stillness before auto-expanding
+ */
+function enableAudioPlayerAutoCollapse(delay) {
+    delay = delay == null ? 8000 : delay;
+    const p = document.getElementById('stickyPlayer');
+    if (!p) return;
+    let isMini = false;
+    let scrollTimer;
+
+    function collapsePlayer() {
+        if (!isMini) {
+            p.classList.add('mini');
+            const toggle = p.querySelector('.sp-toggle');
+            if (toggle) toggle.textContent = '🎧';
+            isMini = true;
+        }
+    }
+
+    function expandPlayer() {
+        if (isMini) {
+            p.classList.remove('mini');
+            const toggle = p.querySelector('.sp-toggle');
+            if (toggle) toggle.textContent = '−';
+            isMini = false;
+        }
+    }
+
+    window.addEventListener('scroll', function() {
+        collapsePlayer();
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(expandPlayer, delay);
+    }, { passive: true });
+
+    // Tap mini bubble → expand immediately
+    p.addEventListener('click', function() {
+        if (isMini) {
+            expandPlayer();
+            clearTimeout(scrollTimer);
+        }
+    });
+}
+
+/**
+ * Change the audio player's source (for language switching on share pages).
+ * Preserves play/pause state.
+ * @param {string} url - New audio URL
+ */
+function setAudioPlayerSrc(url) {
+    const audio = audioPlayerState.audio || document.getElementById('blogAudio');
+    if (!audio || !url) return;
+    const wasPlaying = !audio.paused;
+    audio.src = url;
+    audio.load();
+    if (wasPlaying) audio.play().catch(() => {});
 }

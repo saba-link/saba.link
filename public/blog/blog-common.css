@@ -919,6 +919,9 @@ footer a { color: var(--accent); text-decoration: none; }
     border-top: 1px solid var(--border);
 }
 .sp-auto input { width: 14px; height: 14px; }
+/* When chapter list is empty (share pages without chapters): hide via CSS too */
+.sp-chapters:empty { display: none; }
+.sp-chapters:empty + .sp-auto { display: none; }
 
 @media (max-width: 1200px) {
     .sticky-player {
