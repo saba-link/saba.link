@@ -339,10 +339,13 @@ function scrollToSection(sectionId) {
 function togglePlayer() {
     const p = document.getElementById('stickyPlayer');
     if (!p) return;
-    
+
     p.classList.toggle('mini');
+
+    // Legacy (blog pages): text-only toggle — update emoji vs dash
+    // New (share pages): CSS handles .sp-toggle-close / .sp-toggle-icon visibility
     const toggle = p.querySelector('.sp-toggle');
-    if (toggle) {
+    if (toggle && !toggle.querySelector('.sp-toggle-icon')) {
         toggle.textContent = p.classList.contains('mini') ? '🎧' : '−';
     }
 }
@@ -413,8 +416,9 @@ function enableAudioPlayerAutoCollapse(delay) {
     function collapsePlayer() {
         if (!isMini) {
             p.classList.add('mini');
+            // Legacy text toggle (blog): update emoji; new SVG toggle (share): CSS handles it
             const toggle = p.querySelector('.sp-toggle');
-            if (toggle) toggle.textContent = '🎧';
+            if (toggle && !toggle.querySelector('.sp-toggle-icon')) toggle.textContent = '🎧';
             isMini = true;
         }
     }
@@ -423,7 +427,7 @@ function enableAudioPlayerAutoCollapse(delay) {
         if (isMini) {
             p.classList.remove('mini');
             const toggle = p.querySelector('.sp-toggle');
-            if (toggle) toggle.textContent = '−';
+            if (toggle && !toggle.querySelector('.sp-toggle-icon')) toggle.textContent = '−';
             isMini = false;
         }
     }
@@ -455,4 +459,112 @@ function setAudioPlayerSrc(url) {
     audio.src = url;
     audio.load();
     if (wasPlaying) audio.play().catch(() => {});
+}
+
+/**
+ * Initialize the custom audio player for share pages.
+ * Wires up: seekbar (click + drag + touch), ±15s buttons, play/pause,
+ * speed control, time display.
+ * Uses #blogAudio as the hidden audio source.
+ * @param {string} audioSrc - Audio URL
+ */
+function initCustomPlayer(audioSrc) {
+    const audio = document.getElementById('blogAudio');
+    if (!audio) return;
+
+    audio.src = audioSrc;
+    audioPlayerState.audio = audio;
+
+    const seekbar   = document.getElementById('sp-seekbar');
+    const fill      = document.getElementById('sp-seekbar-fill');
+    const playBtn   = document.getElementById('sp-play');
+    const backBtn   = document.getElementById('sp-back');
+    const fwdBtn    = document.getElementById('sp-fwd');
+    const timeEl    = document.getElementById('sp-time');
+    const durEl     = document.getElementById('sp-dur');
+    const speedCtrl = document.getElementById('speedCtrl');
+
+    const fmt = s => {
+        const t = Math.max(0, Math.floor(s));
+        return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0');
+    };
+
+    // Play / Pause
+    if (playBtn) {
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) audio.play().catch(() => {});
+            else audio.pause();
+        });
+    }
+
+    // ±15 s
+    if (backBtn) backBtn.addEventListener('click', () => {
+        audio.currentTime = Math.max(0, audio.currentTime - 15);
+    });
+    if (fwdBtn) fwdBtn.addEventListener('click', () => {
+        audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 15);
+    });
+
+    // Speed
+    if (speedCtrl) speedCtrl.addEventListener('change', () => {
+        audio.playbackRate = parseFloat(speedCtrl.value);
+    });
+
+    // Play / Pause state icons
+    audio.addEventListener('play',  () => { if (playBtn) playBtn.innerHTML = '&#9646;&#9646;'; });
+    audio.addEventListener('pause', () => { if (playBtn) playBtn.innerHTML = '&#9654;'; });
+
+    // Time + progress updates
+    audio.addEventListener('timeupdate', () => {
+        if (timeEl) timeEl.textContent = fmt(audio.currentTime);
+        if (fill && audio.duration) {
+            fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+        }
+    });
+    audio.addEventListener('loadedmetadata', () => {
+        if (durEl) durEl.textContent = fmt(audio.duration);
+    });
+
+    // Seekbar — click, drag (mouse + touch)
+    if (seekbar) {
+        const seekTo = (clientX) => {
+            if (!audio.duration) return;
+            const rect = seekbar.getBoundingClientRect();
+            const pct  = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+            audio.currentTime = pct * audio.duration;
+            if (fill) fill.style.width = (pct * 100) + '%';
+        };
+
+        seekbar.addEventListener('click', e => seekTo(e.clientX));
+
+        // Mouse drag
+        let dragging = false;
+        seekbar.addEventListener('mousedown', () => {
+            dragging = true;
+            seekbar.classList.add('dragging');
+        });
+        document.addEventListener('mousemove', e => {
+            if (!dragging) return;
+            seekTo(e.clientX);
+        });
+        document.addEventListener('mouseup', () => {
+            if (dragging) { dragging = false; seekbar.classList.remove('dragging'); }
+        });
+
+        // Touch drag
+        seekbar.addEventListener('touchstart', e => {
+            e.preventDefault();
+            dragging = true;
+            seekbar.classList.add('dragging');
+        }, { passive: false });
+        seekbar.addEventListener('touchmove', e => {
+            if (!dragging) return;
+            e.preventDefault();
+            seekTo(e.touches[0].clientX);
+        }, { passive: false });
+        seekbar.addEventListener('touchend', () => {
+            dragging = false;
+            seekbar.classList.remove('dragging');
+        });
+    }
 }

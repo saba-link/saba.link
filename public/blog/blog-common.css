@@ -923,6 +923,86 @@ footer a { color: var(--accent); text-decoration: none; }
 .sp-chapters:empty { display: none; }
 .sp-chapters:empty + .sp-auto { display: none; }
 
+/* ── Custom player controls (share pages) ── */
+/* Toggle button: two children — close-dash (normal) and icon (mini) */
+.sp-toggle-close { pointer-events: none; }
+.sp-toggle-icon  { display: none; pointer-events: none; }
+.sticky-player.mini .sp-toggle-close { display: none; }
+.sticky-player.mini .sp-toggle-icon  { display: block; width: 20px; height: 20px; }
+
+/* Seekbar */
+.sp-seekbar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    margin: 0.75rem 0 0.4rem;
+    position: relative;
+    transition: height 0.1s;
+}
+.sp-seekbar:hover, .sp-seekbar.dragging { height: 9px; }
+.sp-seekbar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    width: 0%;
+    pointer-events: none;
+    transition: width 0.1s linear;
+}
+.sp-seekbar.dragging .sp-seekbar-fill { transition: none; }
+
+/* Controls row: time — buttons — duration */
+.sp-ctrl-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+    margin-top: 0.25rem;
+}
+.sp-time {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    min-width: 34px;
+}
+.sp-time:last-child { text-align: right; }
+.sp-btns {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex: 1;
+    justify-content: center;
+}
+.sp-play-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: opacity 0.15s;
+}
+.sp-play-btn:hover { opacity: 0.85; }
+.sp-skip {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    font-weight: 500;
+    padding: 0.2rem 0.45rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+.sp-skip:hover { border-color: var(--accent); color: var(--accent); }
+
 @media (max-width: 1200px) {
     .sticky-player {
         position: fixed;
