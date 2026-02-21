@@ -847,8 +847,8 @@ footer a { color: var(--accent); text-decoration: none; }
     transition: all 0.3s;
 }
 .sticky-player.mini {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     padding: 0;
     border-radius: 50%;
     cursor: pointer;
@@ -931,7 +931,7 @@ footer a { color: var(--accent); text-decoration: none; }
 .sp-toggle-close { pointer-events: none; }
 .sp-toggle-icon  { display: none; pointer-events: none; }
 .sticky-player.mini .sp-toggle-close { display: none; }
-.sticky-player.mini .sp-toggle-icon  { display: block; width: 20px; height: 20px; }
+.sticky-player.mini .sp-toggle-icon  { display: block; width: 16px; height: 16px; }
 
 /* Seekbar */
 .sp-seekbar {
