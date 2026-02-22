@@ -569,7 +569,7 @@ function initCustomPlayer(audioSrc) {
             artist: 'share.saba.link',
             album: '',
             artwork: [
-                { src: 'https://saba.link/avatar.jpg', sizes: '1280x1280', type: 'image/jpeg' }
+                { src: 'https://saba.link/favicon-512.png', sizes: '512x512', type: 'image/png' }
             ]
         });
 
@@ -596,7 +596,7 @@ function initCustomPlayer(audioSrc) {
                 artist: 'share.saba.link',
                 album: '',
                 artwork: [
-                    { src: 'https://saba.link/avatar.jpg', sizes: '1280x1280', type: 'image/jpeg' }
+                    { src: 'https://saba.link/favicon-512.png', sizes: '512x512', type: 'image/png' }
                 ]
             });
         });
