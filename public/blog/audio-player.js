@@ -558,4 +558,50 @@ function initCustomPlayer(audioSrc) {
             seekbar.classList.remove('dragging');
         });
     }
+
+    // Media Session API — enables background playback + lock screen controls (iOS/Android)
+    if ('mediaSession' in navigator) {
+        const titleEl = document.querySelector('.share-title, .prose h1, h1');
+        const title = titleEl ? titleEl.textContent.trim() : (document.title || 'Artikel');
+
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: title,
+            artist: 'share.saba.link',
+            album: ''
+        });
+
+        navigator.mediaSession.setActionHandler('play',  () => { audio.play().catch(() => {}); });
+        navigator.mediaSession.setActionHandler('pause', () => { audio.pause(); });
+        navigator.mediaSession.setActionHandler('seekbackward', (d) => {
+            audio.currentTime = Math.max(0, audio.currentTime - (d.seekOffset || 15));
+        });
+        navigator.mediaSession.setActionHandler('seekforward', (d) => {
+            audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + (d.seekOffset || 15));
+        });
+        try {
+            navigator.mediaSession.setActionHandler('seekto', (d) => {
+                if (d.fastSeek && 'fastSeek' in audio) { audio.fastSeek(d.seekTime); return; }
+                audio.currentTime = d.seekTime;
+            });
+        } catch (e) {}
+
+        audio.addEventListener('play', () => {
+            navigator.mediaSession.playbackState = 'playing';
+        });
+        audio.addEventListener('pause', () => {
+            navigator.mediaSession.playbackState = 'paused';
+        });
+        audio.addEventListener('timeupdate', () => {
+            if (typeof navigator.mediaSession.setPositionState === 'function'
+                    && audio.duration && isFinite(audio.duration)) {
+                try {
+                    navigator.mediaSession.setPositionState({
+                        duration: audio.duration,
+                        playbackRate: audio.playbackRate || 1,
+                        position: audio.currentTime
+                    });
+                } catch (e) {}
+            }
+        });
+    }
 }
