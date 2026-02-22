@@ -567,7 +567,11 @@ function initCustomPlayer(audioSrc) {
         navigator.mediaSession.metadata = new MediaMetadata({
             title: title,
             artist: 'share.saba.link',
-            album: ''
+            album: '',
+            artwork: [
+                { src: 'https://saba.link/favicon-192.png', sizes: '192x192', type: 'image/png' },
+                { src: 'https://saba.link/favicon.ico',     sizes: '32x32',   type: 'image/x-icon' }
+            ]
         });
 
         navigator.mediaSession.setActionHandler('play',  () => { audio.play().catch(() => {}); });
@@ -587,6 +591,16 @@ function initCustomPlayer(audioSrc) {
 
         audio.addEventListener('play', () => {
             navigator.mediaSession.playbackState = 'playing';
+            // Re-assert metadata on play — iOS requires this at play-time
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: title,
+                artist: 'share.saba.link',
+                album: '',
+                artwork: [
+                    { src: 'https://saba.link/favicon-192.png', sizes: '192x192', type: 'image/png' },
+                    { src: 'https://saba.link/favicon.ico',     sizes: '32x32',   type: 'image/x-icon' }
+                ]
+            });
         });
         audio.addEventListener('pause', () => {
             navigator.mediaSession.playbackState = 'paused';
