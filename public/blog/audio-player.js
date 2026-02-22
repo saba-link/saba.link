@@ -401,17 +401,13 @@ if (document.readyState !== 'loading') {
 
 /**
  * Enable auto-collapse to mini bubble on scroll.
- * Mirrors the rc-bar behavior on share pages: collapse when scrolling,
- * expand automatically after `delay` ms of no scrolling.
- * Tap the mini bubble at any time to expand immediately.
- * @param {number} [delay=8000] - ms of scroll-stillness before auto-expanding
+ * Collapses when scrolling, stays mini until user taps the bubble.
+ * No auto-expand — avoids interrupting reading on mobile.
  */
-function enableAudioPlayerAutoCollapse(delay) {
-    delay = delay == null ? 8000 : delay;
+function enableAudioPlayerAutoCollapse() {
     const p = document.getElementById('stickyPlayer');
     if (!p) return;
     let isMini = false;
-    let scrollTimer;
 
     function collapsePlayer() {
         if (!isMini) {
@@ -434,16 +430,11 @@ function enableAudioPlayerAutoCollapse(delay) {
 
     window.addEventListener('scroll', function() {
         collapsePlayer();
-        clearTimeout(scrollTimer);
-        scrollTimer = setTimeout(expandPlayer, delay);
     }, { passive: true });
 
     // Tap mini bubble → expand immediately
     p.addEventListener('click', function() {
-        if (isMini) {
-            expandPlayer();
-            clearTimeout(scrollTimer);
-        }
+        if (isMini) expandPlayer();
     });
 }
 
