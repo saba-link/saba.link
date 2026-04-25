@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sebastian Stein - SE Leader | AI & Data Security</title>
+    <meta name="description" content="Sebastian Stein - SE Leader & Enterprise Security Advisor. 15 years cybersecurity, former Zscaler SE Manager. AI, Data Security, Zero Trust. Stuttgart/DACH.">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <style>
+        :root {
+            --bg: #08080a;
+            --surface: #111114;
+            --surface-2: #19191d;
+            --surface-3: #222228;
+            --text: #ededf0;
+            --text-2: #b0b0b8;
+            --text-3: #6e6e78;
+            --accent: #3b82f6;
+            --accent-dim: rgba(59,130,246,.12);
+            --accent-line: rgba(59,130,246,.25);
+            --warm: #f59e0b;
+            --warm-dim: rgba(245,158,11,.1);
+            --green: #22c55e;
+            --serif: 'DM Serif Display', Georgia, serif;
+            --sans: 'Outfit', -apple-system, sans-serif;
+            --radius: 14px;
+        }
+
+        [data-theme="light"] {
+            --bg: #fafaf9;
+            --surface: #ffffff;
+            --surface-2: #f5f5f4;
+            --surface-3: #e7e5e4;
+            --text: #1c1917;
+            --text-2: #57534e;
+            --text-3: #a8a29e;
+            --accent-dim: rgba(59,130,246,.08);
+            --accent-line: rgba(59,130,246,.2);
+            --warm-dim: rgba(245,158,11,.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            font-weight: 400;
+            overflow-x: hidden;
+        }
+
+        /* ── Grain Overlay ── */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ── Layout ── */
+        .page { max-width: 800px; margin: 0 auto; padding: 5rem 2rem 3rem; }
+
+        @media (max-width: 640px) { .page { padding: 3rem 1.25rem 2rem; } }
+
+        /* ── Theme Toggle ── */
+        .theme-btn {
+            position: fixed; top: 1.25rem; right: 1.25rem;
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 1px solid var(--surface-3); background: var(--surface);
+            cursor: pointer; display: grid; place-items: center;
+            z-index: 100; transition: .2s;
+        }
+        .theme-btn:hover { border-color: var(--accent); }
+        .theme-btn svg { width: 18px; height: 18px; fill: var(--text-2); }
+        .icon-sun { display: block; }
+        .icon-moon { display: none; }
+        [data-theme="light"] .icon-sun { display: none; }
+        [data-theme="light"] .icon-moon { display: block; }
+
+        /* ── Hero ── */
+        .hero { margin-bottom: 4rem; }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: .5rem;
+            background: var(--accent-dim); border: 1px solid var(--accent-line);
+            padding: .35rem .85rem; border-radius: 100px;
+            font-size: .78rem; font-weight: 500; color: var(--accent);
+            margin-bottom: 1.75rem;
+            animation: fadeIn .6s ease-out;
+        }
+        .hero-badge::before {
+            content: ''; width: 7px; height: 7px; border-radius: 50%;
+            background: var(--green); animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+        .hero-row {
+            display: flex; align-items: flex-start; gap: 2rem;
+            animation: fadeIn .6s ease-out .1s both;
+        }
+        @media (max-width: 640px) { .hero-row { flex-direction: column; align-items: center; text-align: center; } }
+
+        .avatar {
+            width: 110px; height: 110px; border-radius: 50%;
+            border: 2px solid var(--surface-3); object-fit: cover;
+            flex-shrink: 0; transition: .3s;
+        }
+        .avatar:hover { border-color: var(--accent); transform: scale(1.04); }
+
+        .hero-text h1 {
+            font-family: var(--serif); font-size: 2.6rem; font-weight: 400;
+            line-height: 1.15; letter-spacing: -.02em; margin-bottom: .4rem;
+        }
+        @media (max-width: 640px) { .hero-text h1 { font-size: 2rem; } }
+
+        .hero-text .tagline {
+            font-size: 1.05rem; color: var(--accent); font-weight: 500;
+            margin-bottom: .35rem;
+        }
+
+        .hero-text .location {
+            font-size: .88rem; color: var(--text-3);
+            display: flex; align-items: center; gap: .35rem;
+        }
+        @media (max-width: 640px) { .hero-text .location { justify-content: center; } }
+
+        /* ── Actions ── */
+        .actions {
+            display: flex; flex-wrap: wrap; gap: .65rem;
+            margin: 2rem 0 3.5rem;
+            animation: fadeIn .6s ease-out .2s both;
+        }
+        @media (max-width: 640px) { .actions { justify-content: center; } }
+
+        .act {
+            display: inline-flex; align-items: center; gap: .45rem;
+            padding: .65rem 1.15rem; border-radius: 10px;
+            font-size: .88rem; font-weight: 500; font-family: var(--sans);
+            background: var(--surface); border: 1px solid var(--surface-3);
+            color: var(--text); text-decoration: none; cursor: pointer;
+            transition: .2s;
+        }
+        .act:hover { border-color: var(--text-3); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,.25); }
+        .act svg { width: 18px; height: 18px; flex-shrink: 0; }
+        .act-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .act-primary:hover { filter: brightness(1.12); border-color: var(--accent); }
+
+        /* ── Sections ── */
+        .sect {
+            background: var(--surface); border: 1px solid var(--surface-3);
+            border-radius: var(--radius); padding: 2rem;
+            margin-bottom: 1.25rem; transition: .25s;
+            animation: fadeIn .6s ease-out .3s both;
+        }
+        .sect:hover { box-shadow: 0 8px 32px rgba(0,0,0,.15); }
+
+        .sect-label {
+            font-size: .72rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: .1em; color: var(--accent); margin-bottom: 1rem;
+            display: flex; align-items: center; gap: .5rem;
+        }
+        .sect-label::after {
+            content: ''; flex: 1; height: 1px; background: var(--surface-3);
+        }
+
+        .sect p { font-size: .98rem; color: var(--text-2); }
+        .sect p strong { color: var(--text); }
+
+        /* ── Stats Row ── */
+        .stats {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: .75rem; margin-top: 1.5rem;
+        }
+        @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+        .stat {
+            background: var(--accent-dim); border: 1px solid var(--accent-line);
+            border-radius: 10px; padding: 1rem .75rem; text-align: center;
+            transition: .2s;
+        }
+        .stat:hover { transform: translateY(-2px); }
+        .stat-val { font-family: var(--serif); font-size: 1.5rem; color: var(--accent); display: block; }
+        .stat-lbl { font-size: .68rem; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; margin-top: .15rem; }
+
+        /* ── Track Record ── */
+        .highlights { list-style: none; }
+        .highlights li {
+            padding: .7rem .9rem .7rem 2.2rem; position: relative;
+            border-radius: 8px; margin-bottom: .4rem;
+            font-size: .9rem; color: var(--text-2);
+            transition: .15s;
+        }
+        .highlights li:hover { background: var(--surface-2); }
+        .highlights li::before {
+            content: ''; position: absolute; left: .85rem; top: 1rem;
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--accent);
+        }
+        .highlights li strong { color: var(--text); }
+
+        /* ── Tags ── */
+        .tags { display: flex; flex-wrap: wrap; gap: .5rem; }
+        .tag {
+            padding: .45rem .9rem; border-radius: 100px;
+            font-size: .82rem; font-weight: 500;
+            background: var(--surface-2); border: 1px solid var(--surface-3);
+            color: var(--text-2); transition: .2s;
+        }
+        .tag:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ── Career Timeline (horizontal chapters) ── */
+        .timeline-intro {
+            font-size: .92rem; color: var(--text-2); margin-bottom: 1.75rem;
+        }
+
+        .career-bar {
+            display: flex; height: 8px; border-radius: 4px; overflow: hidden;
+            margin-bottom: 2rem; background: var(--surface-2);
+        }
+        .career-bar .seg {
+            height: 100%; transition: .3s;
+            position: relative; cursor: pointer;
+        }
+        .career-bar .seg:hover { filter: brightness(1.3); }
+        .seg-link11 { background: #64748b; flex: 7; }
+        .seg-zscaler-ic { background: var(--accent); flex: 3; opacity: .6; }
+        .seg-zscaler-mgr { background: var(--accent); flex: 5; }
+        .seg-sabbatical { background: var(--warm); flex: 1; }
+
+        .career-legend {
+            display: flex; gap: 1.25rem; flex-wrap: wrap;
+            font-size: .72rem; color: var(--text-3); margin-bottom: 1.5rem;
+        }
+        .career-legend span { display: flex; align-items: center; gap: .35rem; }
+        .career-legend .dot { width: 8px; height: 8px; border-radius: 2px; }
+
+        .chapters { display: grid; gap: 1rem; }
+        .chapter {
+            display: grid; grid-template-columns: 110px 1fr; gap: 1.25rem;
+            padding: 1.25rem; border-radius: 10px;
+            border: 1px solid var(--surface-3); background: var(--surface);
+            transition: .2s;
+        }
+        .chapter:hover { border-color: var(--accent-line); background: var(--surface-2); }
+        @media (max-width: 640px) { .chapter { grid-template-columns: 1fr; gap: .5rem; } }
+
+        .ch-dates { font-size: .78rem; color: var(--accent); font-weight: 600; white-space: nowrap; padding-top: .15rem; }
+        .ch-title { font-family: var(--serif); font-size: 1.1rem; margin-bottom: .15rem; }
+        .ch-company { font-size: .82rem; color: var(--text-3); margin-bottom: .4rem; }
+        .ch-desc { font-size: .85rem; color: var(--text-2); line-height: 1.55; }
+
+        /* ── CTA ── */
+        .cta-sect {
+            background: linear-gradient(135deg, var(--accent-dim), var(--warm-dim));
+            border: 1px solid var(--accent-line);
+            border-radius: var(--radius); padding: 2.5rem 2rem;
+            text-align: center; margin: 2rem 0;
+            animation: fadeIn .6s ease-out .4s both;
+        }
+        .cta-sect h3 { font-family: var(--serif); font-size: 1.6rem; margin-bottom: .5rem; }
+        .cta-sect p { color: var(--text-2); max-width: 520px; margin: 0 auto 1.5rem; font-size: .95rem; }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center; padding: 2rem 0 1rem;
+            color: var(--text-3); font-size: .8rem;
+            animation: fadeIn .6s ease-out .5s both;
+        }
+        .footer-links { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: .75rem; }
+        .footer-links a { color: var(--text-3); text-decoration: none; transition: .2s; }
+        .footer-links a:hover { color: var(--accent); }
+
+        /* ── Modals ── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
+            z-index: 1000; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: var(--surface); border: 1px solid var(--surface-3);
+            border-radius: var(--radius); padding: 2rem;
+            max-width: 420px; width: 100%; text-align: center; position: relative;
+            animation: modalIn .2s ease-out;
+        }
+        @keyframes modalIn { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
+        .modal-close {
+            position: absolute; top: .75rem; right: .75rem;
+            background: none; border: none; color: var(--text-3);
+            font-size: 1.4rem; cursor: pointer; padding: .25rem; line-height: 1;
+        }
+        .modal-close:hover { color: var(--text); }
+        .modal-content h3 { font-family: var(--serif); font-size: 1.3rem; margin-bottom: .5rem; }
+
+        /* CV modal specifics */
+        .cv-toggle { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1.25rem; }
+        .cv-label { font-size: .85rem; color: var(--text-3); transition: .2s; }
+        .cv-label.active { color: var(--text); font-weight: 600; }
+        .cv-switch { position: relative; width: 46px; height: 24px; }
+        .cv-switch input { opacity: 0; width: 0; height: 0; }
+        .cv-slider {
+            position: absolute; inset: 0; background: var(--surface-3);
+            border-radius: 24px; cursor: pointer; transition: .3s;
+        }
+        .cv-slider::before {
+            content: ''; position: absolute; width: 18px; height: 18px;
+            left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .3s;
+        }
+        .cv-switch input:checked + .cv-slider { background: var(--accent); }
+        .cv-switch input:checked + .cv-slider::before { transform: translateX(22px); }
+        .cv-preview { width: 100%; max-width: 260px; margin: 0 auto 1rem; border-radius: 8px; overflow: hidden; border: 1px solid var(--surface-3); }
+        .cv-preview img { width: 100%; height: auto; display: block; }
+        .cv-hint { font-size: .78rem; color: var(--text-3); margin-bottom: 1.25rem; }
+        .turnstile-wrap { display: flex; justify-content: center; margin-bottom: 1.25rem; min-height: 65px; }
+        .dl-btn {
+            display: flex; align-items: center; justify-content: center; gap: .5rem;
+            width: 100%; padding: .85rem; border-radius: 10px;
+            background: var(--accent); color: #fff; font-weight: 600;
+            font-size: .95rem; text-decoration: none; border: none; cursor: pointer;
+            opacity: .4; pointer-events: none; transition: .2s; font-family: var(--sans);
+        }
+        .dl-btn.enabled { opacity: 1; pointer-events: auto; }
+        .dl-btn.enabled:hover { filter: brightness(1.12); transform: translateY(-1px); }
+        .dl-btn svg { width: 18px; height: 18px; }
+        .success-msg { display: none; color: var(--green); font-weight: 500; margin-top: .75rem; font-size: .88rem; }
+        .success-msg.show { display: block; }
+
+        /* Meeting modal */
+        .modal-meeting { max-width: 720px; max-height: 92vh; }
+        .cal-wrap {
+            width: calc(100% + 4rem); height: 660px; overflow: hidden;
+            margin: 0 -2rem -2rem; border-radius: 0 0 var(--radius) var(--radius); background: #fff;
+        }
+        .cal-wrap iframe { width: 100%; height: 100%; border: none; }
+
+        /* ── Cookie ── */
+        .cookie {
+            display: none; position: fixed; bottom: 16px; right: 16px;
+            background: var(--surface); border: 1px solid var(--surface-3);
+            padding: .65rem 1rem; border-radius: 10px; font-size: .78rem;
+            color: var(--text-3); align-items: center; gap: .75rem; z-index: 800;
+            box-shadow: 0 4px 20px rgba(0,0,0,.3); max-width: 300px;
+        }
+        .cookie.show { display: flex; }
+        .cookie button {
+            background: var(--accent); border: none; color: #fff;
+            padding: .3rem .7rem; border-radius: 6px; font-size: .72rem;
+            font-weight: 500; cursor: pointer; white-space: nowrap;
+        }
+
+        /* ── Meeting Banner ── */
+        .mtg-banner {
+            display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--accent), #7c3aed);
+            color: #fff; padding: .65rem 1.15rem; border-radius: 50px;
+            font-size: .85rem; font-weight: 500; align-items: center; gap: .75rem;
+            box-shadow: 0 4px 20px rgba(59,130,246,.35); z-index: 900;
+            animation: slideUp .4s ease-out; max-width: calc(100vw - 40px);
+        }
+        .mtg-banner.show { display: flex; }
+        @keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(16px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        .mtg-banner button { background: rgba(255,255,255,.2); border: none; color: #fff; padding: .35rem .7rem; border-radius: 20px; font-weight: 600; cursor: pointer; }
+        .mtg-banner .x-btn { background: transparent; padding: .15rem .4rem; font-size: 1.1rem; }
+        @media (max-width: 480px) {
+            .mtg-banner { flex-direction: column; gap: .4rem; border-radius: 14px; padding: .85rem; text-align: center; }
+            .mtg-banner .x-btn { position: absolute; top: .4rem; right: .5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
+    <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79zM4 10.5H1v2h3zM13 .55h-2V3.5h2zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79zM20 10.5v2h3v-2zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41z"/></svg>
+</button>
+
+<div class="page">
+
+    <!-- ── Hero ── -->
+    <section class="hero">
+        <div class="hero-badge">Open to Opportunities</div>
+        <div class="hero-row">
+            <img src="/avatar.jpg" alt="Sebastian Stein" class="avatar">
+            <div class="hero-text">
+                <h1>Sebastian Stein</h1>
+                <p class="tagline">SE Leader &middot; AI &amp; Data Security</p>
+                <p class="location">
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                    Stuttgart, Germany
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Actions ── -->
+    <div class="actions">
+        <a href="https://linkedin.saba.link" class="act act-primary" target="_blank">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.064 2.064 0 110-4.128 2.064 2.064 0 010 4.128zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+        </a>
+        <a href="https://github.com/saba-link" class="act" target="_blank">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+            GitHub
+        </a>
+        <a href="#" class="act" onclick="this.href='mailto:'+'hello'+'@'+'saba.link';return true;">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            Email
+        </a>
+        <button class="act" onclick="openMeeting()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Book a Meeting
+        </button>
+        <button class="act" onclick="openCV()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Download CV
+        </button>
+    </div>
+
+    <!-- ── About ── -->
+    <div class="sect">
+        <div class="sect-label">About</div>
+        <p>I help security companies turn complex technology into closed enterprise deals&thinsp;&mdash;&thinsp;by building and leading the teams that make it happen.</p>
+        <br>
+        <p>15 years in cybersecurity across DDoS protection, WAF, Zero Trust, and Cloud Security. 8 of those at Zscaler, where I scaled Sales Engineering through hypergrowth&thinsp;&mdash;&thinsp;700 to 8,000+ employees. Built SE organizations from scratch, defined regional GTM, led Major Account technical sales for Germany's largest enterprises, and developed ICs into leaders.</p>
+        <br>
+        <p><strong>What I bring:</strong> Deep technical credibility paired with high emotional intelligence. Proven playbooks for scaling SE teams in complex enterprise sales. A culture-first approach where people grow, stay, and want to win together.</p>
+
+        <div class="stats">
+            <div class="stat"><span class="stat-val">15</span><span class="stat-lbl">Years Cyber</span></div>
+            <div class="stat"><span class="stat-val">2x</span><span class="stat-lbl">President's Club</span></div>
+            <div class="stat"><span class="stat-val">189%</span><span class="stat-lbl">Peak Attainment</span></div>
+            <div class="stat"><span class="stat-val">700&rarr;8K</span><span class="stat-lbl">Company Scale</span></div>
+        </div>
+    </div>
+
+    <!-- ── Track Record ── -->
+    <div class="sect">
+        <div class="sect-label">Track Record</div>
+        <ul class="highlights">
+            <li>SEM of the Quarter (2025) &middot; SE of H1 (2020) &middot; SE of the Quarter (2019) &middot; 2x President's Club</li>
+            <li><strong>Top Overachievement:</strong> 189% (FY20), 130%+ (FY25), 120%+ (FY24)</li>
+            <li>Entrusted with <strong>most complex territory</strong>&thinsp;&mdash;&thinsp;all Major customers, 11 SEs</li>
+            <li><strong>60% promotion rate, 10% early attrition</strong>&thinsp;&mdash;&thinsp;A-players hired and developed</li>
+            <li><strong>20+ Works Council engagements</strong>, 100% success rate (own territory + cross-region)</li>
+            <li>Drove Zscaler's <strong>fastest seven-figure technical win</strong>&thinsp;&mdash;&thinsp;POV framework adopted regionally</li>
+            <li>Drove Zscaler's <strong>first German bank deal</strong> (BaFin regulated)</li>
+            <li>Rated <strong>&ldquo;Outstanding Impact&rdquo;</strong> for high-EQ leadership under pressure</li>
+            <li><strong>People before metrics:</strong> Designed reintegration framework adopted as DACH standard</li>
+        </ul>
+    </div>
+
+    <!-- ── Expertise ── -->
+    <div class="sect">
+        <div class="sect-label">Expertise</div>
+        <div class="tags">
+            <span class="tag">SE Leadership</span>
+            <span class="tag">Team Building</span>
+            <span class="tag">GTM Strategy</span>
+            <span class="tag">Zero Trust</span>
+            <span class="tag">SASE</span>
+            <span class="tag">Cloud Security</span>
+            <span class="tag">Data Security</span>
+            <span class="tag">AI &amp; RAG</span>
+            <span class="tag">Kubernetes</span>
+            <span class="tag">Complex Sales Cycles</span>
+            <span class="tag">Enterprise Architecture</span>
+        </div>
+    </div>
+
+    <!-- ── Career ── -->
+    <div class="sect">
+        <div class="sect-label">Career Journey</div>
+        <p class="timeline-intro">Two defining chapters: 7 years building presales at a growing security vendor, then 8 years scaling SE teams through Zscaler's hypergrowth.</p>
+
+        <div class="career-bar">
+            <div class="seg seg-link11" title="Link11 (2010-2017)"></div>
+            <div class="seg seg-zscaler-ic" title="Zscaler SE (2017-2020)"></div>
+            <div class="seg seg-zscaler-mgr" title="Zscaler Manager (2020-2025)"></div>
+            <div class="seg seg-sabbatical" title="Sabbatical (2025-2026)"></div>
+        </div>
+
+        <div class="career-legend">
+            <span><span class="dot" style="background:#64748b"></span> Link11</span>
+            <span><span class="dot" style="background:var(--accent);opacity:.6"></span> Zscaler IC</span>
+            <span><span class="dot" style="background:var(--accent)"></span> Zscaler Leader</span>
+            <span><span class="dot" style="background:var(--warm)"></span> Sabbatical</span>
+        </div>
+
+        <div class="chapters">
+            <div class="chapter">
+                <div class="ch-dates">2025 &ndash; 2026</div>
+                <div>
+                    <div class="ch-title">Sabbatical</div>
+                    <div class="ch-company">Family, AI, Infrastructure</div>
+                    <div class="ch-desc">Built production K8s infrastructure, RAG systems, 15+ self-hosted applications. Deep-dived into AI, Data Security, and DSPM. Currently exploring next SE leadership opportunity.</div>
+                </div>
+            </div>
+            <div class="chapter">
+                <div class="ch-dates">2020 &ndash; 2025</div>
+                <div>
+                    <div class="ch-title">Manager Sales Engineering</div>
+                    <div class="ch-company">Zscaler (NASDAQ: ZS) &middot; Zero Trust &amp; Cloud Security</div>
+                    <div class="ch-desc">Evolved scope: Germany Enterprise &rarr; Central Europe &rarr; Germany Major Accounts. Built SE org end-to-end, defined regional GTM and playbook. Led teams supporting DAX and Global 2000.</div>
+                </div>
+            </div>
+            <div class="chapter">
+                <div class="ch-dates">2017 &ndash; 2020</div>
+                <div>
+                    <div class="ch-title">Senior Sales Engineer</div>
+                    <div class="ch-company">Zscaler &middot; Enterprise &rarr; Major Accounts</div>
+                    <div class="ch-desc">Enterprise SE to Major Account SE in under 3 years. Fastest seven-figure technical win. First German bank deal. POV framework adopted regionally.</div>
+                </div>
+            </div>
+            <div class="chapter">
+                <div class="ch-dates">2013 &ndash; 2017</div>
+                <div>
+                    <div class="ch-title">Head of Presales &amp; Consulting</div>
+                    <div class="ch-company">Link11 GmbH &middot; DDoS Protection &amp; WAF</div>
+                    <div class="ch-desc">Built the company's first Presales &amp; Consulting organization from scratch. Established technical sales capabilities for DAX-listed enterprise engagements.</div>
+                </div>
+            </div>
+            <div class="chapter">
+                <div class="ch-dates">2010 &ndash; 2013</div>
+                <div>
+                    <div class="ch-title">Project Management</div>
+                    <div class="ch-company">Link11 GmbH</div>
+                    <div class="ch-desc">Started in technical project delivery, transitioned into presales leadership as the company scaled.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── CTA ── -->
+    <div class="cta-sect">
+        <h3>What's Next</h3>
+        <p>After a sabbatical spent building AI systems, Kubernetes infrastructure, and time with family, I'm actively exploring SE leadership roles in Data Security, SASE, and AI.</p>
+        <a href="https://linkedin.saba.link" class="act act-primary" target="_blank" style="display:inline-flex;">
+            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.064 2.064 0 110-4.128 2.064 2.064 0 010 4.128zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            Connect on LinkedIn
+        </a>
+    </div>
+
+    <!-- ── Footer ── -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="/blog/">Blog</a>
+            <a href="https://linkedin.saba.link" target="_blank">LinkedIn</a>
+            <a href="https://github.com/saba-link" target="_blank">GitHub</a>
+            <a href="#" onclick="this.href='mailto:'+'hello'+'@'+'saba.link';return true;">Email</a>
+            <a href="#" onclick="openCV();return false;">CV</a>
+        </div>
+        <p>&copy; 2026 Sebastian Stein &middot; Ludwigsburg, Germany</p>
+        <p style="margin-top:.35rem;"><a href="#" onclick="openImpressum();return false;" style="color:var(--text-3)">Impressum</a></p>
+    </footer>
+</div>
+
+<!-- ── Cookie ── -->
+<div id="cookie" class="cookie"><span>Minimal cookies for functionality.</span><button onclick="acceptCookie()">OK</button></div>
+
+<!-- ── Meeting Banner ── -->
+<div id="mtgBanner" class="mtg-banner">
+    <span>Interested in connecting?</span>
+    <button onclick="openMeeting();closeBanner()">Book a Meeting</button>
+    <button class="x-btn" onclick="closeBanner()">&times;</button>
+</div>
+
+<!-- ── Impressum Modal ── -->
+<div id="impressumModal" class="modal-overlay" onclick="if(event.target===this)closeImpressum()">
+    <div class="modal-content" style="max-width:480px;text-align:left">
+        <button class="modal-close" onclick="closeImpressum()">&times;</button>
+        <h3>Impressum</h3>
+        <p style="color:var(--text-2);margin:1rem 0;font-size:.88rem;line-height:1.8">
+            <strong>Sebastian Stein</strong><br>Stuttgart Region, Germany<br><br>
+            <strong>Contact:</strong><br>Email: hello@saba.link<br>
+            LinkedIn: <a href="https://linkedin.saba.link" target="_blank" style="color:var(--accent)">linkedin.saba.link</a><br><br>
+            <strong>Responsible (&#167; 55 Abs. 2 RStV):</strong><br>Sebastian Stein
+        </p>
+        <p style="color:var(--text-3);font-size:.78rem;margin-top:1rem;padding-top:.75rem;border-top:1px solid var(--surface-3)">Personal website for career purposes. No commercial services offered.</p>
+    </div>
+</div>
+
+<!-- ── CV Modal ── -->
+<div id="cvModal" class="modal-overlay" onclick="if(event.target===this)closeCV()">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeCV()">&times;</button>
+        <h3>Download CV</h3>
+        <div class="cv-toggle">
+            <span class="cv-label active" id="darkLbl">Screen</span>
+            <label class="cv-switch"><input type="checkbox" id="cvTheme" onchange="toggleCV()"><span class="cv-slider"></span></label>
+            <span class="cv-label" id="lightLbl">Print</span>
+        </div>
+        <div class="cv-preview"><img id="cvImg" src="/CV-Dark-thumb.png" alt="CV Preview"></div>
+        <p class="cv-hint">Dark for on-screen, Light for printing</p>
+        <div class="turnstile-wrap">
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAACTv3KIJu7REkQ5P" data-callback="onTurnstile" data-theme="dark"></div>
+        </div>
+        <a href="/CV-Dark.pdf" id="dlBtn" class="dl-btn" download="CV-Sebastian-Stein-2026.pdf">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Download PDF
+        </a>
+        <p id="successMsg" class="success-msg">Verification complete</p>
+    </div>
+</div>
+
+<!-- ── Meeting Modal ── -->
+<div id="meetingModal" class="modal-overlay" onclick="if(event.target===this)closeMeeting()">
+    <div class="modal-content modal-meeting">
+        <button class="modal-close" onclick="closeMeeting()">&times;</button>
+        <h3>Book a Meeting</h3>
+        <p style="color:var(--text-2);margin-bottom:.75rem;font-size:.9rem">Pick a time that works.</p>
+        <div class="cal-wrap">
+            <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3xLuTP_k9Jyaah0skTpH5CrJa5mTpsDIi_9YPvdgFYHxUsZFQHZrUOMoTrr1Da0gwlnBSgXiER?gv=true"></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme(){const h=document.documentElement,t=h.getAttribute('data-theme')==='light'?'dark':'light';h.setAttribute('data-theme',t);localStorage.setItem('theme',t);syncCV();}
+(function(){const s=localStorage.getItem('theme');if(s)document.documentElement.setAttribute('data-theme',s);else if(matchMedia('(prefers-color-scheme:light)').matches)document.documentElement.setAttribute('data-theme','light');})();
+
+// CV Modal
+function openCV(){document.getElementById('cvModal').classList.add('active');document.body.style.overflow='hidden';}
+function closeCV(){document.getElementById('cvModal').classList.remove('active');document.body.style.overflow='';}
+function onTurnstile(){document.getElementById('dlBtn').classList.add('enabled');document.getElementById('successMsg').classList.add('show');}
+function toggleCV(){const c=document.getElementById('cvTheme').checked,b=document.getElementById('dlBtn'),i=document.getElementById('cvImg');if(c){b.href='/CV-Light.pdf';b.download='CV-Sebastian-Stein-2026-Print.pdf';i.src='/CV-Light-thumb.png';document.getElementById('darkLbl').classList.remove('active');document.getElementById('lightLbl').classList.add('active');}else{b.href='/CV-Dark.pdf';b.download='CV-Sebastian-Stein-2026.pdf';i.src='/CV-Dark-thumb.png';document.getElementById('darkLbl').classList.add('active');document.getElementById('lightLbl').classList.remove('active');}}
+function syncCV(){const t=document.documentElement.getAttribute('data-theme'),c=document.getElementById('cvTheme');c.checked=t==='light';toggleCV();}
+document.addEventListener('DOMContentLoaded',syncCV);
+
+// Meeting
+function openMeeting(){document.getElementById('meetingModal').classList.add('active');document.body.style.overflow='hidden';}
+function closeMeeting(){document.getElementById('meetingModal').classList.remove('active');document.body.style.overflow='';}
+
+// Impressum
+function openImpressum(){document.getElementById('impressumModal').classList.add('active');}
+function closeImpressum(){document.getElementById('impressumModal').classList.remove('active');}
+
+// Cookie
+function acceptCookie(){document.getElementById('cookie').classList.remove('show');localStorage.setItem('cookieOK','1');}
+addEventListener('load',function(){if(!localStorage.getItem('cookieOK'))document.getElementById('cookie').classList.add('show');});
+
+// Banner
+function closeBanner(){document.getElementById('mtgBanner').classList.remove('show');localStorage.setItem('hideBanner','1');}
+addEventListener('load',function(){if(!localStorage.getItem('hideBanner'))setTimeout(function(){document.getElementById('mtgBanner').classList.add('show');},3000);});
+
+// Escape
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeCV();closeMeeting();closeImpressum();}});
+</script>
+
+</body>
+</html>
